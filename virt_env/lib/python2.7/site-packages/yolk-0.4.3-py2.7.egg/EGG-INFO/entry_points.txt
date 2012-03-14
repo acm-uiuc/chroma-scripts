@@ -1,0 +1,3 @@
+[console_scripts]
+yolk = yolk.cli:main
+
