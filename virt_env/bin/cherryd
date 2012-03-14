@@ -1,4 +1,4 @@
-#!/Users/Reed/Programming/chroma-scripts/virt_env/bin/python
+#!/afs/acm.uiuc.edu/user/labotz1/chroma-scripts/virt_env/bin/python
 # EASY-INSTALL-SCRIPT: 'CherryPy==3.2.2','cherryd'
 __requires__ = 'CherryPy==3.2.2'
 import pkg_resources

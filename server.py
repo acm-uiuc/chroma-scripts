@@ -1,4 +1,3 @@
-#!/usr/bin/python
 import cherrypy as http
 import os
 import subprocess
