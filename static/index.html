@@ -1,0 +1,11 @@
+<html>
+   <form action="/set" method="POST">
+      <select name="animation">
+         <option>Off</option>
+      % for a in animations:
+         <option>${a}</option>
+      % endfor
+      </select>
+      <input type="submit" value="apply">
+   </form>
+</html>
