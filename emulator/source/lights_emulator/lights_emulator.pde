@@ -10,15 +10,14 @@ import netP5.*;
 OscP5 oscP5;
 int numboxes = 24;
 color[] colors = new color[numboxes];
-
+PFont f;
 boolean displayText = true;
 
 void setup() {
   size(400,600);
   frameRate(60);
-  PFont f = loadFont("AmericanTypewriter-48.vlw");
+  f = loadFont("AmericanTypewriter-48.vlw");
   textFont(f,48);
-  textAlign(CENTER, CENTER);
   /* start oscP5, listening for incoming messages at port 12000 */
   oscP5 = new OscP5(this,11661);
   usage();
@@ -28,31 +27,27 @@ void usage() {
   println("lights_emulator: \n\t t - toggle text");
 }
 
-
+int[] actualorder = {16, 17, 18, 19, 20, 21, 22, 23, 8, 9, 10, 11, 12, 13, 14, 15, 2, 3, 4, 5, 6, 0, 1, 7};
 void draw() {
   background(0);
   float boxwidth = 100; //hard coded!
-  for (int i=0; i<16; i++) {
-    int column = i%4;
-    int row = i/4;
+  for (int i=0; i<24; i++) {
+    int a = actualorder[i];
+    int column = a%4;
+    int row = a/4;
     fill(colors[i]);
     rect(column*boxwidth, row*boxwidth, boxwidth, boxwidth);
     if (displayText) {
       fill(255, 140);
-      text(""+i, column*boxwidth+boxwidth/2, row*boxwidth+boxwidth/2);
+      textFont(f,48);
+      textAlign(CENTER, CENTER);
+      text(""+(a), column*boxwidth+boxwidth/2, row*boxwidth+boxwidth/2);
+      textFont(f,20);
+      textAlign(RIGHT, BOTTOM);
+      text(""+(i), (column+1)*boxwidth-3, (row+1)*boxwidth-3);
     }
   }
-  for (int i=18; i<23; i++) {
-    int j = i-2;
-    int column = j%4;
-    int row = j/4;
-    fill(colors[i]);
-    rect(column*boxwidth, row*boxwidth, boxwidth, boxwidth);
-    if (displayText) {
-      fill(255, 140);
-      text(""+j, column*boxwidth+boxwidth/2, row*boxwidth+boxwidth/2);
-    }
-  }
+
 }
 
 
@@ -78,7 +73,7 @@ void oscEvent(OscMessage theOscMessage) {
         int g = int(theOscMessage.get(i*3+1).floatValue() / 4);
         int b = int(theOscMessage.get(i*3+2).floatValue() / 4);
         colors[i] = color(r,g,b);
-        println("Color: "+r+","+g+","+b+".");
+        //println("Color: "+r+","+g+","+b+".");
     }
   } catch (Exception e) {
     e.printStackTrace();

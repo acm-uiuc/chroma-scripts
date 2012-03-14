@@ -84,6 +84,7 @@ class ColorsOut:
 
     def write(self, pixels):
         message = OSCMessage("/setcolors")
+        pixels = self.crazyMofoingReorderingOfLights(pixels)
         message.append(pixels)
         self.client.send( message )
     
@@ -91,3 +92,36 @@ class ColorsOut:
         message = OSCMessage("/diffcolors")
         message.append(pixels)
         self.client.send( message )
+
+    def crazyMofoingReorderingOfLights(self, pixels):
+        pixels2 = pixels[:] #make a copy so we don't kerplode someone's work
+        """
+        what are we expecting? we want the back left (by the couches) of the room to be pixel 0, 
+        and by the front is the last row
+        whereas in reality, it's the opposite.
+        here is the order it'd be nice to have them in:
+        
+        0  1  2  3
+        4  5  6  7
+        8  9  10 11
+        12 13 14 15
+        16 17 18 19
+        20 21 22 23
+
+        this is the actual order:   
+        16 17 18 19
+        20 21 22 23
+        8  9  10 11
+        12 13 14 15
+        2  3  4  5
+        6 *0**1**7*   *=not there
+        """
+
+
+        actualorder = [16, 17, 18, 19, 20, 21, 22, 23, 8, 9, 10, 11, 12, 13, 14, 15, 2, 3, 4, 5, 6, 0, 1, 7]
+        for i in range(24):
+            pixels2[i] = pixels[actualorder[i]]
+
+
+
+        return pixels2
