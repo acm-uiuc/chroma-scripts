@@ -30,8 +30,8 @@ def update():
             board[cell] = 0
 
 def init():
-    for i in xrange(6):
-        for j in xrange(4):
+    for i in range(-3,10):
+        for j in range(-3,10):
             if random.random() < 0.5:
                 board[(i,j)] = 1
             else:
@@ -44,8 +44,8 @@ if __name__ == "__main__":
     init()
 
     out = ColorsOut()
-    twoback = []
-    oldpix = []
+    twoback = {}
+    oldpix = {}
     while True:
         pix = []
         alive = 0
@@ -59,10 +59,10 @@ if __name__ == "__main__":
         out.write(pix)
         update()
         time.sleep(0.2)
-        if alive == 0 or oldpix == pix or twoback == pix:
+        if alive == 0 or oldpix == board or twoback == board:
             out.write([(0.0,1023.0,0.0)] * 24)
             time.sleep(0.4)
             init()
-        twoback = oldpix[:]
-        oldpix = pix[:]
+        twoback = oldpix.copy()
+        oldpix = board.copy()
 
