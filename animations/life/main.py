@@ -60,6 +60,8 @@ if __name__ == "__main__":
         update()
         time.sleep(0.2)
         if alive == 0 or oldpix == pix or twoback == pix:
+            out.write([(0.0,1023.0,0.0)] * 24)
+            time.sleep(0.4)
             init()
         twoback = oldpix[:]
         oldpix = pix[:]
