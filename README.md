@@ -36,12 +36,12 @@ manifest.json:
 }
 ```
 
-Each light recieves an input that is a touple (r,g,b) where each of r, g, b can be 0-1023.
+Each light recieves an input that is a tuple (r,g,b) where each of r, g, b can be 0-1023.
 
-Construct an array of touples and send them to the OSC server with 
+Construct an array of tuples and send them to the OSC server with 
 
 ```python
-pix = [(0.0,0.0,0.0)]*24
+pix = [(1023.0,0.0,0.0)]*24
 out = ColorsOut()
 out.write(pix)
 ```
