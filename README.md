@@ -42,3 +42,10 @@ pix = [(0.0,0.0,0.0)]*24
 out = ColorsOut()
 out.write(pix)
 ```
+
+
+To run the light emulator:
+
+```bash
+$ emulator/lights_emulator 
+```
