@@ -119,7 +119,11 @@ class ColorsOut:
 
         actualorder = [23,22,21,20,19,16,17,18,15,14,13,12,11,10,9,8,3,2,5,4,6,0,1,7]
         for i in range(24):
-            pixels2[actualorder[i]] = pixels[i]
+            (r,g,b) = pixels[i]
+            r = max(0, min(r, 1023.0))
+            g = max(0, min(g, 1023.0))
+            b = max(0, min(b, 1023.0))
+            pixels2[actualorder[i]] = (r,g,b)
 
 
 
