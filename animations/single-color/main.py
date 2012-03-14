@@ -11,7 +11,7 @@ if __name__ == "__main__":
     #b = 30.0
     r = 60.0
     g = 255.0
-    b = 120.0
+    b = 90.0
     while True:
         pix = [(4.0 * r, 4.0 * g, 4.0 * b)] * 24
         out.write(pix)
