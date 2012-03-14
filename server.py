@@ -41,6 +41,17 @@ class Serv:
          return "Animation %s started"%animation
       return "Unknown animation %s"%animation
 
+   @http.expose
+   @http.tools.allow(methods=['POST'])
+   def pull(self):
+      p = os.popen('git pull origin master','r')
+      output = ""
+      while 1:
+         line = p.readline()
+         if not line: break
+         output += line + '\n'
+      return output
+
 if __name__ == "__main__":
    config = {
              '/static':{
