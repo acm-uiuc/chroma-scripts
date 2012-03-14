@@ -2,7 +2,7 @@ import cherrypy as http
 import os
 import subprocess
 import signal
-import json
+import simplejson as json
 
 from mako.template import Template
 from mako.lookup import TemplateLookup
