@@ -1,5 +1,6 @@
-from osc import ColorsOut
 import sys
+sys.path.append("./")
+from osc import ColorsOut
 
 
 def printHelp():

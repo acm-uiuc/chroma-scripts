@@ -1,6 +1,8 @@
+import sys
+sys.path.append("./")
+from osc import ColorsOut
 import random
 import math
-from osc import ColorsOut
 
 steps = 24
 time_per_cycle = 3.0
