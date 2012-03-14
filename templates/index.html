@@ -28,9 +28,10 @@
     }
     
     function pull(){
+       $("#messages").append('<div class="alert" id="pull-message"><a class="close" data-dismiss="alert">x</a><p>Pulling....</p></div>');
        $.post('/pull',function(data){
-          messages += 1;
-          $("#messages").append('<div class="alert" id="message-'+messages+'"><a class="close" data-dismiss="alert">x</a>'+data+'</div>');
+          $("#pull-message").append("<pre>" + data + "</pre>");
+          $("#pull-message").append("<p><strong>Refresh to see new animations</strong></p>");
        });
     }
     </script>
