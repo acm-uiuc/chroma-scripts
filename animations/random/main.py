@@ -1,5 +1,5 @@
 import sys
-sys.path.append("./")
+sys.path.append("./osc")
 from osc import ColorsOut
 import random
 import math

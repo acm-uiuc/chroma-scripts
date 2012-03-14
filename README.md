@@ -18,7 +18,7 @@ main.py:
 
 ```python
 import sys
-sys.path.append("./")
+sys.path.append("./osc")
 from osc import ColorsOut
 ...
 ```

@@ -1,0 +1,4 @@
+#!/bin/sh
+
+APPDIR=$(dirname "$0")
+java  -Djava.library.path="$APPDIR" -cp "$APPDIR/lib/lights_emulator.jar:$APPDIR/lib/core.jar:$APPDIR/lib/oscP5.jar" lights_emulator
