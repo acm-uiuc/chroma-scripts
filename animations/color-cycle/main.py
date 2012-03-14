@@ -26,5 +26,5 @@ if __name__ == "__main__":
         elif hue < 6.0:
             pix = [(1024.0 * c,0.0,1024.0 * x)]*24
         out.write(pix)
-        hue += 0.1
-        time.sleep(0.1)
+        hue += 0.2
+        time.sleep(0.2)
