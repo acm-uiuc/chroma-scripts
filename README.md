@@ -46,4 +46,18 @@ out = ColorsOut()
 out.write(pix)
 ```
 
+Emulator
+--------
+In order to run the files locally, we provide a lights emulator written in Processing.
+
+To run it:
+
+`$ emulator/lights_emulator`
+
+and then run your animation
+
+`$ run.py YOUR_ANIMATION_NAME`
+
+run.py requires pyosc
+
 
