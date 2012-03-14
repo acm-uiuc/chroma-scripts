@@ -5,7 +5,10 @@ Chroma lights is a frame work for running annimations for led lights over OSC.
 
 Running
 -------
-To run an animation run `./run.py [animation name]`
+
+To run the light emulator: `$ emulator/lights_emulator`
+
+To run an animation: `$ ./run.py [animation name]`
 
 
 Contributing
@@ -29,7 +32,7 @@ manifest.json:
 {
 	"name":"Random Colors",
 	"description":"Random colors on 3 second intervals",
-	"creator","RJ and Reed"
+	"creator":"RJ and Reed"
 }
 ```
 
@@ -44,8 +47,3 @@ out.write(pix)
 ```
 
 
-To run the light emulator:
-
-```bash
-$ emulator/lights_emulator 
-```
