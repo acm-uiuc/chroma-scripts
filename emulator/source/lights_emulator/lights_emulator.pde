@@ -32,7 +32,7 @@ void usage() {
 void draw() {
   background(0);
   float boxwidth = 100; //hard coded!
-  for (int i=0; i<24; i++) {
+  for (int i=0; i<16; i++) {
     int column = i%4;
     int row = i/4;
     fill(colors[i]);
@@ -42,7 +42,17 @@ void draw() {
       text(""+i, column*boxwidth+boxwidth/2, row*boxwidth+boxwidth/2);
     }
   }
-  
+  for (int i=18; i<23; i++) {
+    int j = i-2;
+    int column = j%4;
+    int row = j/4;
+    fill(colors[i]);
+    rect(column*boxwidth, row*boxwidth, boxwidth, boxwidth);
+    if (displayText) {
+      fill(255, 140);
+      text(""+j, column*boxwidth+boxwidth/2, row*boxwidth+boxwidth/2);
+    }
+  }
 }
 
 
