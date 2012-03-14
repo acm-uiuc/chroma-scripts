@@ -16,4 +16,4 @@ if __name__ == "__main__":
                 pix[i] = (0.0,1023.0,1023.0)
             out.write(pix)
             #time.sleep(1.0)
-            time.sleep(0.3)
+            time.sleep(0.2)
