@@ -10,7 +10,7 @@ if __name__ == "__main__":
     while True:
         pix = []
         c = 1.0
-        x = c * (1.0 - abs(hue % 1.0 - 1.0))
+        x = c * (1.0 - abs(hue % 2.0 - 1.0))
         if hue > 6.0:
             hue = 0.0
         if hue < 1.0:
