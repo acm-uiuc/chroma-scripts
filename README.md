@@ -48,9 +48,10 @@ out = ColorsOut()
 out.write(pix)
 ```
 
-To add simple effects, such as automatic fade-in and fade-out of pixels, use the animations library
+To add simple effects, such as automatic fade-in and fade-out of pixels, use the animations library in place of ColorsOut
 
 ```python
+from animations import FadeAnimation
 pix = [(1023.0,0.0,0.0)]*24
 out = FadeAnimation()
 out.FADERATE = 8.0 #optional
