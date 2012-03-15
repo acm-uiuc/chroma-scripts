@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import daemon
 
-import osc
+import oscapi
 
 with daemon.DaemonContext():
 	osc.start()

@@ -1,6 +1,6 @@
 import sys
 sys.path.append("./osc")
-from osc import ColorsOut
+from oscapi import ColorsOut
 
 numbers = []
 

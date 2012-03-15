@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import sys, random
 sys.path.append("./osc")
-from osc import ColorsOut
+from oscapi import ColorsOut
 
 board = {}
 
