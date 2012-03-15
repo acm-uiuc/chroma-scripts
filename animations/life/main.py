@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import sys, random
 sys.path.append("./osc")
-from oscapi import ColorsOut
+from animations import FadeAnimation 
 
 board = {}
 
@@ -43,7 +43,8 @@ if __name__ == "__main__":
 
     init()
 
-    out = ColorsOut()
+    out = FadeAnimation()
+    out.start()
     twoback = {}
     oldpix = {}
     while True:
@@ -58,7 +59,7 @@ if __name__ == "__main__":
                     pix.append((0.0,0.0,1023.0))
         out.write(pix)
         update()
-        time.sleep(0.2)
+        time.sleep(0.3)
         if alive == 0 or oldpix == board or twoback == board:
             out.write([(0.0,1023.0,0.0)] * 24)
             time.sleep(0.4)
