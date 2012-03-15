@@ -123,7 +123,7 @@ class ColorsOut:
         """
 
         actualorder = [23,22,21,20,19,16,17,18,15,14,13,12,11,10,9,8,3,2,5,4,6,0,1,7]
-        badcolors = [0,1,7]
+        badcolors = [3,2,5,4,6,0,1,7]
         for i in range(len(actualorder)):
             (r,g,b) = pixels[i]
             r = max(0.0, min(r, 1023.0))
