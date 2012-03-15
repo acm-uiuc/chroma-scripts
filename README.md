@@ -12,8 +12,6 @@ To run the light emulator: `$ emulator/lights_emulator`
 
 To run an animation: `$ ./run.py [animation name]`
 
-run.py requires pyosc `sudo easy_install pyosc`
-
 
 Contributing
 ------------
