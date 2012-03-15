@@ -6,6 +6,8 @@ Chroma lights is a frame work for running annimations for led lights over OSC.
 Running
 -------
 
+In order to run the animations locally, we provide a lights emulator written in Processing.
+
 To run the light emulator: `$ emulator/lights_emulator`
 
 To run an animation: `$ ./run.py [animation name]`
