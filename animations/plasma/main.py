@@ -52,7 +52,7 @@ if __name__ == "__main__":
             for j in xrange(4):
                 h, s, v = board[(i, j)]
                 r, g, b = hsv_to_rgb(h * 360., s, v)
-                print board[(i, j)],r, g, b
-                pix.append((r * 4., g * 4., b * 4.))
+                # print board[(i, j)],r, g, b
+                pix.append((r * 1.5, g * 4., b * 1.5))
         out.write(pix)
         time.sleep(1/30.)
