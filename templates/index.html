@@ -51,12 +51,12 @@
        </div>
      </div>
      <div class="container">
-     <div id="messages">
-     </div>
      <div class="hero-unit">
        <p>Welcome to Chroma Controller. If you would like to create animations for the lights please see the information on github: <a href="https://github.com/acm-uiuc/chroma-scripts">https://github.com/acm-uiuc/chroma-scripts</a></p>
      </div>     
-      <form action="/set" method="POST" id="options" onSubmit="apply(); return false;">
+      <div id="messages">
+     </div>
+     <form action="/set" method="POST" id="options" onSubmit="apply(); return false;">
          <p>
             <input type="submit" value="apply" class="btn">
             <input type="text" class="input-medium search-query" id="id_search" placeholder="Search">
