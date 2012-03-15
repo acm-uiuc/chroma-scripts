@@ -1,11 +1,13 @@
 import sys
 sys.path.append("./osc")
-from oscapi import ColorsOut
+from animations import FadeAnimation
 
 
 if __name__ == "__main__":
     import time
-    out = ColorsOut()
+    out = FadeAnimation()
+    out.FADERATE = 8.0
+    out.start()
 
     while True:
         for i in range(24):
@@ -15,5 +17,5 @@ if __name__ == "__main__":
             else:
                 pix[i] = (0.0,1023.0,1023.0)
             out.write(pix)
-            #time.sleep(1.0)
-            time.sleep(0.2)
+            time.sleep(0.7)
+            #time.sleep(0.2)

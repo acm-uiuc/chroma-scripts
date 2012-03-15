@@ -79,8 +79,8 @@ if __name__ == "__main__":
 
 
 
-
 class ColorsOut:
+
     def __init__(self):
         self.client = OSCClient()
         self.client.connect( ("localhost",11661) )
@@ -95,6 +95,8 @@ class ColorsOut:
         message = OSCMessage("/diffcolors")
         message.append(pixels)
         self.client.send( message )
+
+        
 
     def crazyMofoingReorderingOfLights(self, pixels):
         pixels2 = pixels[:] #make a copy so we don't kerplode someone's work
