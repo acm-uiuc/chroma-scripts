@@ -18,12 +18,13 @@
     <script src="static/js/bootstrap-alert.js"></script>
     <script src="static/js/jquery.quicksearch.js"></script>
     <script>
-    var messages = 0;
     function apply(){
        $.post('/set',$("#options").serialize(),function(data){
-          messages += 1;
-         $("#messages").append('<div class="alert" id="message-'+messages+'"><a class="close" data-dismiss="alert">x</a>'+data+'</div>');
-         window.setTimeout(function() { $("#message-"+messages).alert('close') }, 8*1000);
+          var newElement = $('<div class="alert"><a class="close" data-dismiss="alert">x</a>'+data+'</div>');
+          $("#messages").append(newElement);
+          newElement.delay(8*1000).queue(function(){
+             $(this).alert('close');
+          });
        });
        return false;
     }
@@ -37,7 +38,6 @@
    }
    
    $(document).ready(function(){
-      console.log("hi there");
       $('input#id_search').quicksearch('table#list tbody tr');
    });
     </script>
