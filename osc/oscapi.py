@@ -10,6 +10,9 @@ def handle_timeout(self):
 
 CLEAR_TIME = 5 #5 seconds before it clears stuff
 
+def clamp(x):
+    return max(0.0, min(x, 1023.0))
+
 class ColorsIn:
 # this method of reporting timeouts only works by convention
 # that before calling handle_request() field .timed_out is 
@@ -22,7 +25,7 @@ class ColorsIn:
         #print "Here's what we got : path:%s tags:%s args:%s source:%s"%(str(path),str(tags),str(args),str(source))
         pixels = []
         for i in range(0,len(args)/3):
-            pixel = (args[i*3],args[i*3+1],args[i*3+2])
+            pixel = (clamp(args[i*3]), clamp(args[i*3+1]), clamp(args[i*3+2]))
             pixels.append( pixel )
         #print "Pixels: %s"%str(pixels)
         #print "Time: "+str((time.time()*1000) % 10000)
@@ -38,7 +41,7 @@ class ColorsIn:
         for i in range(0,len(args)/3):
             pp = (args[i*3],args[i*3+1],args[i*3+2])
             p = pixels[i]
-            pixels[i] = (p[0]+pp[0], p[1]+pp[1], p[2]+pp[2])
+            pixels[i] = (clamp(p[0]+pp[0]), clamp(p[1]+pp[1]), clamp(p[2]+pp[2]))
         #print "Pixels: %s"%str(pixels)
         #print "Time: "+str((time.time()*1000) % 10000)
         octoapi.write(pixels)
