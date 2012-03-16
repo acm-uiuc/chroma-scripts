@@ -22,5 +22,4 @@ if __name__ == "__main__":
     while True:
         out.write(flag)
         time.sleep(1.0)
-        n += direction
 
