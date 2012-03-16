@@ -4,7 +4,7 @@ sys.path.append("./osc")
 from animations import FadeAnimation 
 
 red   = (1023.0,0.0,0.0)
-white = (0.0,0.0,0.0)
+white = (1023.0,1023.0,1023.0)
 blue  = (0.0,0.0,1023.0)
 
 flag = [blue, blue, red,   red,
