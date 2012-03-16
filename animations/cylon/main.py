@@ -9,11 +9,14 @@ if __name__ == "__main__":
     out = FadeAnimation()
     out.start()
     n = 0
+    direction = 1
     while True:
         pix = []
         alive = 0
-        if n == 4:
-            n == 0
+        if n == 3:
+            direction = -1
+        elif n == 0:
+            direction = 1
         for i in xrange(6):
             for j in xrange(4):
                 if j == n:
@@ -22,5 +25,5 @@ if __name__ == "__main__":
                     pix.append((0.0,0.0,0.0))
         out.write(pix)
         time.sleep(0.3)
-        n += 1
+        n += direction
 
