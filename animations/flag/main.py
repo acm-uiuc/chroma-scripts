@@ -5,7 +5,7 @@ from animations import FadeAnimation
 
 red   = (1023.0,0.0,0.0)
 white = (0.0,0.0,0.0)
-blue  = (0.0,1023.0,0.0)
+blue  = (0.0,0.0,1023.0)
 
 flag = [blue, blue, red,   red,
         blue, blue, white, white,
