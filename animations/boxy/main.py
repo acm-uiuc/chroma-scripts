@@ -6,21 +6,20 @@ import math
 import time
 from animations import FadeAnimation 
 
-
-#todo: use smoothe animations, reverse template
 #author: Harsh Singh
 nice_pixels = [
     (1023.0,0.0,0.0),
     (0.0,1023.0,0.0),
     (0.0,0.0,1023.0),
+    (0.0,1023.0,1023.0),
+    (1023.0,0.,1023.0),
+    (1023.0,1023.0,0.),    
     (823.0,823.0,0.0),
     (823.0,0.0,823.0),
-    (0.0,823.0,823.0),
+    (0.0,823.0,823.0),    
 ]
 bgColor=(0.0,0.0,0.0)
-#6,7
 template = [[0,1,4,5],[2,3,6,7],[8,9,12,13],[10,11,14,15],[16,17,20,21],[18,19,22,23],[0,1,2,3,4,7,8,11,12,13,14,15],[5,6,9,10],]
-#inuse = [False] * 6
 out = FadeAnimation()
 out.start()
 layout = [bgColor]*24
@@ -54,14 +53,9 @@ def frame1():
 def frame2():
     rand = random.sample(nice_pixels,3)
     layout = [rand[2]]*24
-    #printlayout(layout)
-    #out.write(layout)
-    #time.sleep(0.4)    
     for i in [6,7]:
         for j in range(len(template[i])):
-            #print "i= "+str(i)+" j ="+str(j)
             layout[template[i][j]] = rand[i-6]
-        #printlayout(layout)
         out.write(layout)
         time.sleep(0.2)
 
@@ -113,7 +107,7 @@ def frame4():
             layout[path[i-1]] = rand[1]
         # else:
         #     layout[path[len(path)-1]] = rand[1]
-        printlayout(layout)    
+        #printlayout(layout)    
         out.write(layout)
         time.sleep(0.05)
     for i in range(len(path)):
@@ -122,7 +116,7 @@ def frame4():
             layout[path[len(path)-i]] = rand[3]
         # else:
         #     layout[path[len(path)-1]] = rand[1]
-        printlayout(layout)    
+        #printlayout(layout)    
         out.write(layout)
         time.sleep(0.05)
 
@@ -152,25 +146,14 @@ def color_picker():
         time.sleep(.01)
 
 
-# def fadecolor(layout):
-#     #todo
-
-
-
 def printlayout(layout):
     for i in range(0,5):
         print (str(layout[i*4+0])+ " " +str(layout[i*4+1])+ " " +str(layout[i*4+2])+ " " +str(layout[i*4+3]))
     print
 
 if __name__ == "__main__":
-    #frame4()
-    #color_picker()
-
     while True:
-
         frame1()
         frame2()
         frame3()
-        #frame2()
         frame4()
-    #print "called"

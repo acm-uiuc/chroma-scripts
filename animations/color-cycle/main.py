@@ -27,4 +27,5 @@ if __name__ == "__main__":
             pix = [(1023.0 * c,0.0,1023.0 * x)]*24
         out.write(pix)
         hue += 0.02
+        print pix[0]
         time.sleep(0.1)
