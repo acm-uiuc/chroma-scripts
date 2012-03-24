@@ -36,10 +36,11 @@ def frame1():
     frame1_rev(lastColor)
 
 def frame1_rev(lastColor):
+    global layout
     layout = [[bgColor for col in range(4)] for row in range(4)]
     for x in range(3,-1,-1):
-        for i in range(3,-1,-1):
-            for j in range(3,-1,-1):
+        for i in range(0,4):
+            for j in range(0,4):
                 if ((i == x and j <= x) or (i< x and j == x)):                    
                     layout[i][j] = lastColor
         out.write(makeLayout(layout))
@@ -50,8 +51,8 @@ def frame2():
     lastColor = randColor[2]
     for x in range(3,-1,-1):
         mycol = transition_color(randColor[0],randColor[1],x,4)
-        for i in range(3,-1,-1):
-            for j in range(3,-1,-1):
+        for i in range(0,4):
+            for j in range(0,4):
                 if ((i == x and j >= x) or (i> x and j == x)):                    
                     layout[i][j] = mycol
         out.write(makeLayout(layout))
@@ -59,11 +60,60 @@ def frame2():
     frame2_rev(lastColor)
 
 def frame2_rev(lastColor):
+    global layout 
     layout = [[bgColor for col in range(4)] for row in range(4)]
     for x in range(0,4):
         for i in range(0,4):
             for j in range(0,4):
                 if ((i == x and j >= x) or (i> x and j == x)):                    
+                    layout[i][j] = lastColor
+        out.write(makeLayout(layout))
+        time.sleep(.1)
+
+def frame3():
+    randColor = random.sample(nice_pixels,3)
+    lastColor = randColor[2]
+    for x in range(3,-1,-1):
+        mycol = transition_color(randColor[0],randColor[1],x,4)
+        for i in range(0,4):
+            for j in range(0,4):
+                if ((i == x and j <= 3-x) or (i> x and j == 3-x)):                    
+                    layout[i][j] = mycol
+        out.write(makeLayout(layout))
+        time.sleep(.2)
+    frame3_rev(lastColor)
+
+def frame3_rev(lastColor):
+    global layout
+    layout = [[bgColor for col in range(4)] for row in range(4)]
+    for x in range(0,4):
+        for i in range(0,4):
+            for j in range(0,4):
+                if ((i == x and j <= 3-x) or (i> x and j == 3-x)):                    
+                    layout[i][j] = lastColor
+        out.write(makeLayout(layout))
+        time.sleep(.1)
+
+def frame4():
+    randColor = random.sample(nice_pixels,3)
+    lastColor = randColor[2]
+    for x in range(0,4):
+        mycol = transition_color(randColor[0],randColor[1],x,4)
+        for i in range(0,4):
+            for j in range(0,4):
+                if ((i == x and j >= 3-x) or (i< x and j == 3-x)):                    
+                    layout[i][j] = mycol
+        out.write(makeLayout(layout))
+        time.sleep(.2)
+    frame4_rev(lastColor)
+
+def frame4_rev(lastColor):
+    global layout
+    layout = [[bgColor for col in range(4)] for row in range(4)]
+    for x in range(3,-1,-1):
+        for i in range(0,4):
+            for j in range(0,4):
+                if ((i == x and j >= 3-x) or (i< x and j == 3-x)):                    
                     layout[i][j] = lastColor
         out.write(makeLayout(layout))
         time.sleep(.1)
@@ -95,9 +145,19 @@ def printLayout(lay):
 
 if __name__ == "__main__":
     # frame1()
-    # frame2()
-
+    # frame4()
 
     while True:
-        frame1()
-        frame2()
+        # frame1()
+        # frame2()
+        # frame3()
+        # frame4()
+        f = random.randint(1,4)
+        if f == 1:
+            frame1()
+        elif f == 2:
+            frame2()
+        elif f == 3: 
+            frame3()
+        else:
+            frame4()
