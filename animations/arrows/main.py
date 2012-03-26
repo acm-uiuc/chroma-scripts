@@ -20,6 +20,8 @@ bgColor=(0.0,0.0,0.0)
 layout = [[bgColor for col in range(4)] for row in range(4)]
 out = FadeAnimation()
 out.start()
+rev_sleep_time = .5
+frame_sleep_time = 1
 
 
 def frame1():
@@ -32,7 +34,7 @@ def frame1():
                 if ((i == x and j <= x) or (i< x and j == x)):                    
                     layout[i][j] = mycol
         out.write(makeLayout(layout))
-        time.sleep(.2)
+        time.sleep(frame_sleep_time)
     frame1_rev(lastColor)
 
 def frame1_rev(lastColor):
@@ -44,7 +46,7 @@ def frame1_rev(lastColor):
                 if ((i == x and j <= x) or (i< x and j == x)):                    
                     layout[i][j] = lastColor
         out.write(makeLayout(layout))
-        time.sleep(.1)
+        time.sleep(rev_sleep_time)
 
 def frame2():
     randColor = random.sample(nice_pixels,3)
@@ -56,7 +58,7 @@ def frame2():
                 if ((i == x and j >= x) or (i> x and j == x)):                    
                     layout[i][j] = mycol
         out.write(makeLayout(layout))
-        time.sleep(.2)
+        time.sleep(frame_sleep_time)
     frame2_rev(lastColor)
 
 def frame2_rev(lastColor):
@@ -68,7 +70,7 @@ def frame2_rev(lastColor):
                 if ((i == x and j >= x) or (i> x and j == x)):                    
                     layout[i][j] = lastColor
         out.write(makeLayout(layout))
-        time.sleep(.1)
+        time.sleep(rev_sleep_time)
 
 def frame3():
     randColor = random.sample(nice_pixels,3)
@@ -80,7 +82,7 @@ def frame3():
                 if ((i == x and j <= 3-x) or (i> x and j == 3-x)):                    
                     layout[i][j] = mycol
         out.write(makeLayout(layout))
-        time.sleep(.2)
+        time.sleep(frame_sleep_time)
     frame3_rev(lastColor)
 
 def frame3_rev(lastColor):
@@ -92,7 +94,7 @@ def frame3_rev(lastColor):
                 if ((i == x and j <= 3-x) or (i> x and j == 3-x)):                    
                     layout[i][j] = lastColor
         out.write(makeLayout(layout))
-        time.sleep(.1)
+        time.sleep(rev_sleep_time)
 
 def frame4():
     randColor = random.sample(nice_pixels,3)
@@ -104,7 +106,7 @@ def frame4():
                 if ((i == x and j >= 3-x) or (i< x and j == 3-x)):                    
                     layout[i][j] = mycol
         out.write(makeLayout(layout))
-        time.sleep(.2)
+        time.sleep(frame_sleep_time)
     frame4_rev(lastColor)
 
 def frame4_rev(lastColor):
@@ -116,7 +118,7 @@ def frame4_rev(lastColor):
                 if ((i == x and j >= 3-x) or (i< x and j == 3-x)):                    
                     layout[i][j] = lastColor
         out.write(makeLayout(layout))
-        time.sleep(.1)
+        time.sleep(rev_sleep_time)
 
 def blink():
     x = random.choice(nice_pixels)
@@ -148,16 +150,16 @@ if __name__ == "__main__":
     # frame4()
 
     while True:
-        # frame1()
-        # frame2()
-        # frame3()
-        # frame4()
-        f = random.randint(1,4)
-        if f == 1:
-            frame1()
-        elif f == 2:
-            frame2()
-        elif f == 3: 
-            frame3()
-        else:
-            frame4()
+        frame1()
+        frame2()
+        frame3()
+        frame4()
+        # f = random.randint(1,4)
+        # if f == 1:
+        #     frame1()
+        # elif f == 2:
+        #     frame2()
+        # elif f == 3: 
+        #     frame3()
+        # else:
+        #     frame4()
