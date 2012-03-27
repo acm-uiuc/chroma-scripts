@@ -2,7 +2,7 @@ import sys, random
 sys.path.append("./osc")
 from oscapi import ColorsOut
 
-falloffRate = 20.0
+falloffRate = 7.0
 
 if __name__ == "__main__":
     import time
