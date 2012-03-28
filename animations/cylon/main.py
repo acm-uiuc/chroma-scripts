@@ -20,10 +20,7 @@ if __name__ == "__main__":
         for i in xrange(6):
             for j in xrange(4):
                 if j == n:
-                    if i == 1 and j == 3:
-                        pix.append((0.0,0.0,1023.0))
-                    else:
-                        pix.append((1023.0,0.0,0.0))
+                    pix.append((1023.0,0.0,0.0))
                 else:
                     pix.append((0.0,0.0,0.0))
         out.write(pix)
