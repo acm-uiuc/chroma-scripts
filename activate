@@ -7,40 +7,51 @@ if [ ! -d "./env/lib/python2.7/site-packages/cherrypy" ]; then
     FIRSTRUN=true
 fi
 TABCOMPLETION='_anims(){ _arguments "1: :(`ls animations`)" }; compdef _anims run.py'
-
+VERBOSE=false
+if [ "$1" == "-v" ]; then
+    VERBOSE=true
+fi
 # Just make them install virtualenv if they don't have it already.
 if ! which virtualenv &> /dev/null; then
-    echo "[error] please install virtualenv first."
+    echo "[1m[31m[error][0m please install virtualenv first."
     exit 1
 fi
 
 # Make sure environment exists
 if [ -d "./env" ]; then
-    echo "[info] virtualenv is already installed at ./env"
+    if $VERBOSE; then
+        echo "[1m[33m[info][0m virtualenv is already installed at ./env"
+    fi
 else
-    echo "[info] virtualenv not created. doing that:"
+    echo "[1m[33m[info][0m virtualenv not created. doing that:"
     virtualenv env | awk '{ print "\t" $0 }'
-    echo "[info] created virtualenv in ./env"
+    echo "[1m[33m[info][0m created virtualenv in ./env"
 fi
 
 # Make sure tab completion for run.py exists
 if grep "$TABCOMPLETION" env/bin/activate &> /dev/null; then
-    echo "[info] tab completion already injected"
+    if $VERBOSE; then
+        echo "[1m[33m[info][0m tab completion already injected"
+    fi
 else
-    echo "[info] adding zsh tab completion to activation script"
+    echo "[1m[33m[info][0m adding zsh tab completion to activation script"
     echo $TABCOMPLETION >> env/bin/activate
 fi
 
-echo "[info] activating"
+if $VERBOSE; then
+    echo "[1m[33m[info][0m activating"
+fi
 source env/bin/activate
 
 # Make sure dependencies are up to date
 if $FIRSTRUN; then
-    echo "[info] making sure all dependencies are installed. may take a bit, since this your first run."
+    echo "[1m[33m[info][0m making sure all dependencies are installed. may take a bit, since this your first run."
     pip install -r dependencies.txt
 else
-    echo "[info] making sure all dependencies are, you know, there and stuff."
+    if $VERBOSE; then
+        echo "[1m[33m[info][0m making sure all dependencies are, you know, there and stuff."
+    fi
     pip install -r dependencies.txt &> /dev/null
 fi
 
-echo "[WOOT] activated!"
+echo "[1m[32m[woot] [0mactivated!"
