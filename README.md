@@ -25,6 +25,47 @@ source env/bin/activate
 pip install -r dependencies.txt
 ```
 
+Windows Setup
+-----
+###### 0. Install Python 2.x from http://www.python.org/getit/
+
+###### 1. Download and run Processing for Windows from http://processing.org/download/
+
+###### 2. Install the oscP5 library from http://www.sojamo.de/libraries/oscP5/
+
+###### 3. Run chroma-scripts\emulator\source\lights_emulator\lights_emulator.pde in processing
+
+###### 4. Add "C:\Python2x" and "C:\Python2x\Scripts" to your PATH environment variable
+
+###### 5. Install the setup tools as described here: http://pypi.python.org/pypi/setuptools
+
+###### 6. Download and fully extract this file: http://pypi.python.org/pypi/pip#downloads
+
+###### 7. Go to the extracted directory and run 
+```bash
+python setup.py install
+```
+```bash
+pip install virtualenv
+```
+
+###### 8. Change directory to chroma-scripts and run
+```bash
+virtualenv env
+```
+```bash
+env\Scripts\activate
+```
+```bash
+pip install -r dependencies.txt
+```
+```bash
+python run.py random
+```
+Note: be sure (env) is displayed at the beginning of every command line when running scripts, or else it will not work!
+
+###### 9. Check your emulator. It should be displaying random colors.
+
 Running
 -------
 You'll want to activate your virtualenv if it's not already. In your chrome-scripts folder (after having set everything up above before), `source env/bin/activate`.
