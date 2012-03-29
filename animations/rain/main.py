@@ -1,5 +1,4 @@
 import sys, random
-sys.path.append("./osc")
 from oscapi import ColorsOut
 
 falloffRate = 7.0
