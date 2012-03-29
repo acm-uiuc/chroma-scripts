@@ -13,8 +13,7 @@ sudo easy_install virtualenv
 
 Move on to running to get the environment activated and dependencies checked.
 
-Windows Setup
------
+###Windows users
 Scroll down to see instructions since there are a buttload.
 
 Running
