@@ -9,7 +9,7 @@ if __name__ == "__main__":
     import time
     out = ColorsOut()
     pix = [(0.0,0.0,0.0)] * 24
-    totalFrames = 70
+    totalFrames = 130
     frames = totalFrames
     while True:
         # Make some rain
@@ -23,13 +23,13 @@ if __name__ == "__main__":
         #       pix[i] = (0.0,0.0,0.0)
         if frames > 0:
             for i in xrange(12):
-                pix[random.randint(0,23)] = (pix[i][0] + random.randint(0,50.0), 0.0, 0.0)
+                pix[random.randint(0,23)] = (pix[i][0] + 1023/70, 0.0, 0.0)
             out.write(pix)
             frames = frames - 1
             time.sleep(.04)
         else:
             for i in xrange(12):
-                pix[random.randint(0,23)] = (pix[i][0] - random.randint(0,50.0), 0.0, 0.0)
+                pix[random.randint(0,23)] = (pix[i][0] - 1023/70, 0.0, 0.0)
             out.write(pix)
             frames = frames - 1
             if frames < -totalFrames:
