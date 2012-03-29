@@ -1,4 +1,4 @@
-import sys
+ git remote add upstream git://github.com/octocat/Spoon-Knife.gitimport sys
 sys.path.append("./osc")
 from oscapi import ColorsOut
 import random
