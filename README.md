@@ -60,4 +60,10 @@ out.start()
 out.write(pix)
 ```
 
+Tips and Tricks
+---------------
 
+Chroma is bright, and can easily be the predominant lighting in the room.  Fast blinking of the lights can be intense, so be considerate.
+
+* Avoid instantaneous changes in both intensity and color
+* Use the provided animation framework to transition between colors
