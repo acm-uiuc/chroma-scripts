@@ -50,19 +50,3 @@ if __name__ == "__main__":
     		out.FADERATE = stepFadeRate
     		randOrder = random.sample(colors,len(colors))
                 time.sleep(stepDelay)
-
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
