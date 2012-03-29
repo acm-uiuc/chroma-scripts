@@ -1,4 +1,4 @@
- git remote add upstream git://github.com/octocat/Spoon-Knife.gitimport sys
+import sys
 sys.path.append("./osc")
 from oscapi import ColorsOut
 import random
@@ -24,7 +24,7 @@ max_x = 3
 
 out = FadeAnimation()
 out.start()
-frame_sleep_time = .4
+frame_sleep_time = .05
 
 def makeX(col1, col2, col3):
     for x in xrange(4):
@@ -53,8 +53,13 @@ def makeRandColor():
     randColor = random.sample(nice_pixels,6)
 
 def transitionX():
-    for a in xrange(0,6,1):
-        makeX(transition_color(randColor[0], randColor[1], a, 6),transition_color(randColor[1], randColor[0], a, 6),transition_color(randColor[2], randColor[3], a, 6))
+    times = 40
+    for a in xrange(0,times,1):
+        makeX(transition_color(randColor[0], randColor[1], a, times),transition_color(randColor[1], randColor[0], a, times),transition_color(randColor[2], randColor[3], a, times))
+        out.write(makeLayout(layout))
+        time.sleep(frame_sleep_time)
+    for a in xrange(0,times,1):
+        makeX2(transition_color(randColor[1], randColor[0], a, times),transition_color(randColor[0], randColor[1], a, times),transition_color(randColor[3], randColor[2], a, times))
         out.write(makeLayout(layout))
         time.sleep(frame_sleep_time)
         # makeX2(transition_color(randColor[0], randColor[1], a+1, 6),transition_color(randColor[1], randColor[0], a+1, 6),transition_color(randColor[2], randColor[3], a+1, 6))
