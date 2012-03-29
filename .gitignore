@@ -2,3 +2,4 @@
 virt_env/*
 env/*
 Scripts/*
+build/*

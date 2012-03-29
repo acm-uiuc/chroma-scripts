@@ -1,5 +1,5 @@
 #!/usr/bin/python
-from OSC import OSCServer, OSCClient, OSCMessage
+from osc import OSCServer, OSCClient, OSCMessage
 import sys
 import time
 # funny python's way to add a method to an instance of a class
