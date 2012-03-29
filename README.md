@@ -18,7 +18,7 @@ Scroll down to see instructions since there are a buttload.
 
 Running
 -------
-In your chrome-scripts directory, run the activate script which will take care of all the setup and verification as well as virutalenv activation:
+In your chrome-scripts directory, run the activate script. If this is your first time running it, give it a bit to fetch dependencies and setup the environment:
 
 ```bash
 source activate
@@ -26,11 +26,9 @@ source activate
 
 In order to run the animations locally, we provide a lights emulator written in Processing.
 
-To run the light emulator: `$ emulator/lights_emulator`
+To run an animation: `$ ./run.py [animation name]`. If you're on zsh, tab completion should work too. If there isn't an emulator started, it will start one for you automatically.
 
-To run an animation: `$ ./run.py [animation name]`
-
-
+When you're done hacking, `deactivate` to get exit out of virtualenv.
 Contributing
 ------------
 To contribute add a new folder in the animation directory. 
