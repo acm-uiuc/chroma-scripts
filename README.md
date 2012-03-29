@@ -18,15 +18,20 @@ Scroll down to see instructions since there are a buttload.
 
 Running
 -------
+There is a simple emulator provided that will start automatically when run.py is executed if it's not running already.
 In your chrome-scripts directory, run the activate script. If this is your first time running it, give it a bit to fetch dependencies and setup the environment:
 
 ```bash
 source activate
 ```
 
-In order to run the animations locally, we provide a lights emulator written in Processing.
+To run an animation:
 
-To run an animation: `$ ./run.py [animation name]`. If you're on zsh, tab completion should work too. If there isn't an emulator started, it will start one for you automatically.
+```bash
+./run.py [animation name]
+```
+
+If you're on zsh, tab completion should work too. If there isn't a server or emulator started, it will start the emulator for you automatically.
 
 When you're done hacking, `deactivate` to get exit out of virtualenv.
 Contributing
