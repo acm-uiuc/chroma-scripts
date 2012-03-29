@@ -39,7 +39,6 @@ main.py:
 
 ```python
 import sys
-sys.path.append("./osc")
 from oscapi import ColorsOut
 ...
 ```
