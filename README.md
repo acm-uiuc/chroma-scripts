@@ -5,25 +5,13 @@ Chroma lights is a frame work for running annimations for led lights over OSC.
 
 Setup
 -----
-#### 1. Install virtualenv (skip if you have it already)
+Install virtualenv (skip if you have it already).
+
 ```bash
 sudo easy_install virtualenv
 ```
 
-#### 2. Create your virtualenv for chroma-scripts
-```bash
-virtualenv env # or replace 'env' with whatever folder  you want your environment in
-```
-
-#### 3. Activate the environment
-```bash
-source env/bin/activate
-```
-
-#### 4. Install dependencies
-```bash
-pip install -r dependencies.txt
-```
+Move on to running to get the environment activated and dependencies checked.
 
 Windows Setup
 -----
@@ -68,7 +56,12 @@ Note: be sure (env) is displayed at the beginning of every command line when run
 
 Running
 -------
-You'll want to activate your virtualenv if it's not already. In your chrome-scripts folder (after having set everything up above before), `source env/bin/activate`.
+In your chrome-scripts directory, run the activate script which will take care of all the setup and verification as well as virutalenv activation:
+
+```bash
+source activate
+```
+
 In order to run the animations locally, we provide a lights emulator written in Processing.
 
 To run the light emulator: `$ emulator/lights_emulator`
