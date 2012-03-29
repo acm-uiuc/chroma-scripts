@@ -2,9 +2,8 @@
 # Type in "source activate" before doing your poopage.
 
 # guilty until proven innocent
-if [ -d "./build" ]; then
-    FIRSTRUN=false
-else
+FIRSTRUN=false
+if [ ! -d "./env/lib/python2.7/site-packages/cherrypy" ]; then
     FIRSTRUN=true
 fi
 TABCOMPLETION='_anims(){ _arguments "1: :(`ls animations`)" }; compdef _anims run.py'
@@ -43,3 +42,5 @@ else
     echo "[info] making sure all dependencies are, you know, there and stuff."
     pip install -r dependencies.txt &> /dev/null
 fi
+
+echo "[WOOT] activated!"
