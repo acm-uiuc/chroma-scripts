@@ -9,7 +9,7 @@ if __name__ == "__main__":
     pix = [(0.0,0.0,0.0)] * 24
     fallRate = 7.0
     sleepTimer = 0.02
-    frameMax = 100
+    frameMax = 40
     frames = 0
     for i in xrange(24):    
         pix[i] = (0.0 , 0.0, 0.0)
