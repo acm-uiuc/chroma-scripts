@@ -1,2 +1,4 @@
 *.pyc
 virt_env/*
+env/*
+build/*
