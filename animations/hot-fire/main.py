@@ -39,8 +39,8 @@ if __name__ == "__main__":
                 floorOfSat = floor(max(40,hsv[i][1]))
                 sat = random.randint(floorOfSat,100)
             
-                #secs = time.localtime().tm_sec
-                hue = random.gauss(37.0,5.0) % 360
+                secs = time.localtime().tm_sec
+                hue = random.gauss(secs * 6.0,5.0) % 360
                 lum = random.randint(95,100)
                 fun = 0.0
             
@@ -55,12 +55,18 @@ if __name__ == "__main__":
             fun = hsv[i][3]
             
             hsv[i] = (hue,sat,lum,fun)
-            
+        
+        
+        
+        # --------------------------------------------------------------------------
+        # Everything below this is strictly utilitarian (changing hsv to 10bit rgb):
+        # --------------------------------------------------------------------------
+        
         # Convert from hsv to 10 bit rgb:
         for i in xrange(MAX_BULBS):
-            hue = hsv[i][0] * 1.0 / 360.0
-            sat = hsv[i][1] * 1.0 / 100.0
-            lum = hsv[i][2] * 1.0 / 100.0
+            hue = (hsv[i][0] %360) * 1.0 / 360.0
+            sat = min(100,abs(hsv[i][1])) * 1.0 / 100.0
+            lum = min(100,abs(hsv[i][2])) * 1.0 / 100.0
             
             hsv01[i] = (hue,sat,lum)
             
@@ -70,3 +76,4 @@ if __name__ == "__main__":
         
         out.write(pixOut)
         time.sleep(1.0/fps)
+
