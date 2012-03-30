@@ -11,5 +11,43 @@ def turnOff(currentPixels, index):
 
 
 def makeAllPixels(pix, data):
-    pix = simplejson.loads(data)
+    try:
+        pix = simplejson.loads(data)
+    except:
+        pass
+    
+    return pix
+
+def makePixel(pix, data):
+    print data
+    try:
+        index = simplejson.loads(data.split("/")[0])
+        pix[index] = simplejson.loads(data.split("/")[1])
+    except:
+        pass
+
+    return pix
+
+
+def showSuccessfulConnection(pix): 
+    for i in xrange(24):
+        pix[i] = (0.0, 0.0, 1023.0)
+
+    pix[5] = (0.0, 1023.0, 0.0)
+    pix[6] = (0.0, 1023.0, 0.0)
+    pix[9] = (0.0, 1023.0, 0.0)
+    pix[10] = (0.0, 1023.0, 0.0)
+
+    return pix
+
+
+def showErrorInConnection(pix):
+    for i in xrange(24):
+        pix[i] = (0.0, 0.0, 1023.0)
+        
+    pix[5] = (1023.0, 0.0, 0.0)
+    pix[6] = (1023.0, 0.0, 0.0)
+    pix[9] = (1023.0, 0.0, 0.0)
+    pix[10] = (1023.0, 0.0, 0.0)
+
     return pix
