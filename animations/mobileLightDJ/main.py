@@ -106,7 +106,7 @@ if __name__ == "__main__":
     
                 out.write(pix)
         
-            time.sleep(sleepTime)
+                    #time.sleep(sleepTime)
             
             out.write(currentPixels)
         
