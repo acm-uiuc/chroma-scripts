@@ -17,7 +17,6 @@ if __name__ == "__main__":
     pix = [(0.0,0.0,0.0)] * 24
     currentPixels = [(0.0,0.0,0.0)] * 24
     timeout = 1.0
-
     out.write(pix)
     
     serv = socket( AF_INET,SOCK_STREAM)    
@@ -30,6 +29,7 @@ if __name__ == "__main__":
 
     conn,addr = serv.accept()
     print '...connected!'
+    
     for i in xrange(24):
         pix[i] = (1023.0, 0.0, 0.0)
     
@@ -81,9 +81,30 @@ if __name__ == "__main__":
                 for i in xrange(24):
                     currentPixels[i] = pix[i]
 
+                out.write(pix)
+
+
                 conn.close()
-                serv.close()
-                running = False
+                
+                
+                serv.listen(5)   
+                print 'listening...'
+
+                conn,addr = serv.accept()
+                print '...connected!'
+    
+                for i in xrange(24):
+                    pix[i] = (1023.0, 0.0, 0.0)
+    
+                pix[5] = (0.0, 1023.0, 0.0)
+                pix[6] = (0.0, 1023.0, 0.0)
+                pix[9] = (0.0, 1023.0, 0.0)
+                pix[10] = (0.0, 1023.0, 0.0)
+    
+                for i in xrange(24):
+                    currentPixels[i] = pix[i]
+    
+                out.write(pix)
         
             time.sleep(sleepTime)
             
