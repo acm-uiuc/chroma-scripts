@@ -1,4 +1,4 @@
-import sys, random, scripts,select
+import sys, random, scripts, select, json
 from socket import *
 sys.path.append("./osc")
 from oscapi import ColorsOut
@@ -18,6 +18,8 @@ if __name__ == "__main__":
     currentPixels = [(0.0,0.0,0.0)] * 24
     timeout = 1.0
 
+    out.write(pix)
+    
     serv = socket( AF_INET,SOCK_STREAM)    
     serv.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
     
@@ -28,32 +30,37 @@ if __name__ == "__main__":
 
     conn,addr = serv.accept()
     print '...connected!'
+    for i in xrange(24):
+        pix[i] = (1023.0, 0.0, 0.0)
+    
+    pix[5] = (0.0, 1023.0, 0.0)
+    pix[6] = (0.0, 1023.0, 0.0)
+    pix[9] = (0.0, 1023.0, 0.0)
+    pix[10] = (0.0, 1023.0, 0.0)
+
+    for i in xrange(24):
+        currentPixels[i] = pix[i]
+
+    out.write(pix)
     
     running = True
     while running:
         conn.setblocking(0)
         ready = select.select([conn], [], [], timeout)
-        # pixels = pickle.loads(data)
+
         if ready[0]: 
             data = conn.recv(BUFSIZE)
             updatePix = False
             message = data.split("//")[0]
             print message
-            if message == "makeAllRed": 
-                pix = scripts.makeAllRed(pix)
-                updatePix = True
-            
-            if message == "makeAllBlue": 
-                pix = scripts.makeAllBlue(pix)
-                updatePix = True
-
-            if message == "makeAllGreen": 
-                pix = scripts.makeAllGreen(pix)
+            if message == "makeAllPixels":
+                pix = scripts.makeAllPixels(pix, data.split("//")[1])
                 updatePix = True
     
             if updatePix:
                 for i in xrange(24):
                     currentPixels[i] = pix[i]
+        
             if message == "turnOn": 
                 messageData = data.split("//")[1]
                 currentPixels = scripts.turnOn(pix, currentPixels, int(messageData))
@@ -61,10 +68,19 @@ if __name__ == "__main__":
             if message == "turnOff": 
                 messageData = data.split("//")[1]
                 currentPixels = scripts.turnOff(currentPixels, int(messageData))
-                print pix
     
             if message == "closeConnection": 
-                conn.shutdown(0)
+                for i in xrange(24):
+                    pix[i] = (1023.0, 0.0, 0.0)
+
+                pix[5] = (0.0, 0.0, 1023.0)
+                pix[6] = (0.0, 0.0, 1023.0)
+                pix[9] = (0.0, 0.0, 1023.0)
+                pix[10] = (0.0, 0.0, 1023.0)
+
+                for i in xrange(24):
+                    currentPixels[i] = pix[i]
+
                 conn.close()
                 serv.close()
                 running = False
