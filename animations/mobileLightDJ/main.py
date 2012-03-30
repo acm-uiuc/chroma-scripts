@@ -60,6 +60,15 @@ if __name__ == "__main__":
                 for i in xrange(24):
                     currentPixels[i] = pix[i]
         
+            if message == "turnOffAll":
+                currentPixels = scripts.turnOffAll(currentPixels)
+                        
+            if message == "turnOnAll":
+                currentPixels = scripts.turnOnAll(pix, currentPixels)
+        
+            if message == "flashAllLights":
+                currentPixels = scripts.flashAll(currentPixels)
+        
             if message == "turnOn": 
                 messageData = data.split("//")[1]
                 currentPixels = scripts.turnOn(pix, currentPixels, int(messageData))

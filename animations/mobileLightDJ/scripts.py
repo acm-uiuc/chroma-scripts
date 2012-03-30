@@ -9,6 +9,21 @@ def turnOff(currentPixels, index):
     currentPixels[index] = (0.0, 0.0, 0.0)
     return currentPixels
 
+def turnOffAll(currentPixels):
+    for i in xrange(24):
+        currentPixels[i] = (0.0, 0.0, 0.0)
+    return currentPixels
+
+def turnOnAll(pix, currentPixels):
+    for i in xrange(24):
+        currentPixels[i] = pix[i]
+    return currentPixels
+
+def flashAll(currentPixels):
+    for i in xrange(24):
+        currentPixels[i] = (1023.0, 1023.0, 1023.0)
+
+    return currentPixels
 
 def makeAllPixels(pix, data):
     try:
