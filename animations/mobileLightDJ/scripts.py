@@ -1,4 +1,4 @@
-import json
+import simplejson
 
 
 def turnOn(pix, currentPixels, index):
