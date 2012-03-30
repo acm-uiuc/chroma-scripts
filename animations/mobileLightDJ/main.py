@@ -1,4 +1,4 @@
-import sys, random, scripts
+import sys, random, scripts,select
 from socket import *
 sys.path.append("./osc")
 from oscapi import ColorsOut
@@ -16,6 +16,8 @@ if __name__ == "__main__":
     out = ColorsOut()
     pix = [(0.0,0.0,0.0)] * 24
     currentPixels = [(0.0,0.0,0.0)] * 24
+    timeout = 1.0
+
     serv = socket( AF_INET,SOCK_STREAM)    
     serv.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
     
@@ -29,11 +31,11 @@ if __name__ == "__main__":
     
     running = True
     while running:
-        data = conn.recv(BUFSIZE)
-        if not data: 
-            out.write(currentPixels)
+        conn.setblocking(0)
+        ready = select.select([conn], [], [], timeout)
         # pixels = pickle.loads(data)
-        else: 
+        if ready[0]: 
+            data = conn.recv(BUFSIZE)
             updatePix = False
             message = data.split("//")[0]
             print message
@@ -67,11 +69,17 @@ if __name__ == "__main__":
                 serv.close()
                 running = False
         
-        time.sleep(sleepTime)
+            time.sleep(sleepTime)
+            
+            out.write(currentPixels)
+        
+        
+        else: 
+            print "Not ready"
+            out.write(currentPixels)
 
         #pixel = [tuple(s.split()) for s in data.split("//")]
         
 #print pix
         #for i in xrange(24):
         #pix[i] = pixel
-        out.write(currentPixels)
