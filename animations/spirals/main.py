@@ -1,5 +1,4 @@
 import sys
-sys.path.append("./osc")
 import random
 import time
 from animations import FadeAnimation 

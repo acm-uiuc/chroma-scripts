@@ -37,7 +37,7 @@ class Serv:
          return "Turned off"
       animations  = os.listdir('./animations/')
       if animation in animations:
-         p = subprocess.Popen(['python','animations/%s/main.py'%animation])
+         p = subprocess.Popen(['env','PYTHONPATH=./osc:$PYTHONPATH','python','animations/%s/main.py'%animation])
          current = animation
          return "Animation %s started"%animation
       return "Unknown animation %s"%animation

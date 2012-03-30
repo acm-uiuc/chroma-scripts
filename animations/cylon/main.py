@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import sys, random
-sys.path.append("./osc")
 from animations import FadeAnimation 
 
 if __name__ == "__main__":

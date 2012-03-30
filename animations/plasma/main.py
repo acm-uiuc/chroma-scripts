@@ -2,7 +2,6 @@
 import math
 import random
 import sys
-sys.path.append("./osc")
 from oscapi import ColorsOut
 
 board = {}

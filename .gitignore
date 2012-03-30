@@ -3,3 +3,4 @@ virt_env/*
 env/*
 Scripts/*
 build/*
+.DS_Store

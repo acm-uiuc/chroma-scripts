@@ -1,5 +1,4 @@
 import sys
-sys.path.append("./osc")
 from animations import FadeAnimation
 
 

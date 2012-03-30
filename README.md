@@ -13,62 +13,27 @@ sudo easy_install virtualenv
 
 Move on to running to get the environment activated and dependencies checked.
 
-Windows Setup
------
-###### 0. Install Python 2.x from http://www.python.org/getit/
-
-###### 1. Download and run Processing for Windows from http://processing.org/download/
-
-###### 2. Install the oscP5 library from http://www.sojamo.de/libraries/oscP5/
-
-###### 3. Run chroma-scripts\emulator\source\lights_emulator\lights_emulator.pde in processing
-
-###### 4. Add "C:\Python2x" and "C:\Python2x\Scripts" to your PATH environment variable
-
-###### 5. Install the setup tools as described here: http://pypi.python.org/pypi/setuptools
-
-###### 6. Download and fully extract this file: http://pypi.python.org/pypi/pip#downloads
-
-###### 7. Go to the extracted directory and run 
-```bash
-python setup.py install
-```
-```bash
-pip install virtualenv
-```
-
-###### 8. Change directory to chroma-scripts and run
-```bash
-virtualenv env
-```
-```bash
-env\Scripts\activate
-```
-```bash
-pip install -r dependencies.txt
-```
-```bash
-python run.py random
-```
-Note: be sure (env) is displayed at the beginning of every command line when running scripts, or else it will not work!
-
-###### 9. Check your emulator. It should be displaying random colors.
+###Windows users
+Scroll down to see instructions since there are a buttload.
 
 Running
 -------
-In your chrome-scripts directory, run the activate script which will take care of all the setup and verification as well as virutalenv activation:
+There is a simple emulator provided that will start automatically when run.py is executed if it's not running already.
+In your chrome-scripts directory, run the activate script. If this is your first time running it, give it a bit to fetch dependencies and setup the environment:
 
 ```bash
 source activate
 ```
 
-In order to run the animations locally, we provide a lights emulator written in Processing.
+To run an animation:
 
-To run the light emulator: `$ emulator/lights_emulator`
+```bash
+./run.py [animation name]
+```
 
-To run an animation: `$ ./run.py [animation name]`
+If you're on zsh, tab completion should work too. If there isn't a server or emulator started, it will start the emulator for you automatically.
 
-
+When you're done hacking, `deactivate` to get exit out of virtualenv.
 Contributing
 ------------
 To contribute add a new folder in the animation directory. 
@@ -79,7 +44,6 @@ main.py:
 
 ```python
 import sys
-sys.path.append("./osc")
 from oscapi import ColorsOut
 ...
 ```
@@ -123,3 +87,44 @@ Chroma is bright, and can easily be the predominant lighting in the room.  Fast 
 
 * Avoid instantaneous changes in both intensity and color
 * Use the provided animation framework to transition between colors
+
+Windows Setup Cont'd
+--------------------
+###### 0. Install Python 2.x from http://www.python.org/getit/
+
+###### 1. Download and run Processing for Windows from http://processing.org/download/
+
+###### 2. Install the oscP5 library from http://www.sojamo.de/libraries/oscP5/
+
+###### 3. Run chroma-scripts\emulator\source\lights_emulator\lights_emulator.pde in processing
+
+###### 4. Add "C:\Python2x" and "C:\Python2x\Scripts" to your PATH environment variable
+
+###### 5. Install the setup tools as described here: http://pypi.python.org/pypi/setuptools
+
+###### 6. Download and fully extract this file: http://pypi.python.org/pypi/pip#downloads
+
+###### 7. Go to the extracted directory and run 
+```bash
+python setup.py install
+```
+```bash
+pip install virtualenv
+```
+
+###### 8. Change directory to chroma-scripts and run
+```bash
+virtualenv env
+```
+```bash
+env\Scripts\activate
+```
+```bash
+pip install -r dependencies.txt
+```
+```bash
+python run.py random
+```
+Note: be sure (env) is displayed at the beginning of every command line when running scripts, or else it will not work!
+
+###### 9. Check your emulator. It should be displaying random colors.
