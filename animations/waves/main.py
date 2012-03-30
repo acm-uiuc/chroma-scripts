@@ -17,10 +17,8 @@ if __name__ == "__main__":
         pix = [(0.0,0.0,0.0)]*24
         for i in range(4):
             for j in range(4):
-                print "sin = " + str(sin(radians(counter)/2.0+float(i)/18.0)+0.5)
-                rgb = hsv_to_rgb((sin(radians(counter)/2.0+float(i)/24.0)+1.0)/2.0, 1.0, 1.0)
+                rgb = hsv_to_rgb((sin(radians(counter)/2.0+float(i)/6.0)+1.0)/2.0, 1.0, 1.0)
                 pix[i*4+j] = (rgb[0]*1023.0, rgb[1]*1023.0, rgb[2]*1023.0)
-                print rgb
         out.write(pix)
         time.sleep(1.0/speed)
         counter += 0.8
