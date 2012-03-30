@@ -1,4 +1,4 @@
-import sys, random, scripts, select, json
+import sys, random, scripts, select, simplejson
 from socket import *
 sys.path.append("./osc")
 from oscapi import ColorsOut
