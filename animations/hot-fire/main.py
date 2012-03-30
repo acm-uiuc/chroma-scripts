@@ -39,8 +39,8 @@ if __name__ == "__main__":
                 floorOfSat = floor(max(40,hsv[i][1]))
                 sat = random.randint(floorOfSat,100)
             
-                secs = time.localtime().tm_sec
-                hue = random.gauss(secs * 6.0,5.0) % 360
+                # secs = time.localtime().tm_sec
+                hue = random.gauss(35.0,5.0) % 360
                 lum = random.randint(95,100)
                 fun = 0.0
             
