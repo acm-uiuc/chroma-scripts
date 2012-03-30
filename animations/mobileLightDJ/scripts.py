@@ -11,5 +11,5 @@ def turnOff(currentPixels, index):
 
 
 def makeAllPixels(pix, data):
-    pix = json.loads(data)
+    pix = simplejson.loads(data)
     return pix
