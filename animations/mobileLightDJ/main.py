@@ -1,4 +1,4 @@
-import sys, random, pickle
+import sys, random, scripts, select, simplejson
 from socket import *
 sys.path.append("./osc")
 from oscapi import ColorsOut
@@ -12,15 +12,16 @@ BUFSIZE = 4096
 #author: Robert Pieta
 if __name__ == "__main__":
     import time
+    sleepTime = 0.05
     out = ColorsOut()
     pix = [(0.0,0.0,0.0)] * 24
+    currentPixels = [(0.0,0.0,0.0)] * 24
+    timeout = 1.0
+    out.write(pix)
     
     serv = socket( AF_INET,SOCK_STREAM)    
-
-    serv.bind((ADDR))    
-    serv.listen(5)  
-
-    serv = socket( AF_INET,SOCK_STREAM)    
+    serv.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
+    
     
     serv.bind((ADDR))
     serv.listen(5)   
@@ -29,23 +30,93 @@ if __name__ == "__main__":
     conn,addr = serv.accept()
     print '...connected!'
     
-    while True:
-        conn.send(pickle.dumps(pix))
-        time.sleep(1.0)
+    for i in xrange(24):
+        pix[i] = (1023.0, 0.0, 0.0)
+    
+    pix[5] = (0.0, 1023.0, 0.0)
+    pix[6] = (0.0, 1023.0, 0.0)
+    pix[9] = (0.0, 1023.0, 0.0)
+    pix[10] = (0.0, 1023.0, 0.0)
 
-        data = conn.recv(BUFSIZE)
-        if not data: break
-        # pixels = pickle.loads(data)
-        pixelBefore = data.split("//")
-        pixelAfter = [x.split() for x in pixelBefore]
-        for i in xrange(24):
-            pix[i] = (float(pixelAfter[i][0]),float(pixelAfter[i][1]), float(pixelAfter[i][2]))
+    for i in xrange(24):
+        currentPixels[i] = pix[i]
+
+    out.write(pix)
+    
+    running = True
+    while running:
+        conn.setblocking(0)
+        ready = select.select([conn], [], [], timeout)
+
+        if ready[0]: 
+            data = conn.recv(BUFSIZE)
+            updatePix = False
+            message = data.split("//")[0]
+            print message
+            if message == "makeAllPixels":
+                pix = scripts.makeAllPixels(pix, data.split("//")[1])
+                updatePix = True
+    
+            if updatePix:
+                for i in xrange(24):
+                    currentPixels[i] = pix[i]
         
+            if message == "turnOn": 
+                messageData = data.split("//")[1]
+                currentPixels = scripts.turnOn(pix, currentPixels, int(messageData))
+                        
+            if message == "turnOff": 
+                messageData = data.split("//")[1]
+                currentPixels = scripts.turnOff(currentPixels, int(messageData))
+    
+            if message == "closeConnection": 
+                for i in xrange(24):
+                    pix[i] = (1023.0, 0.0, 0.0)
+
+                pix[5] = (0.0, 0.0, 1023.0)
+                pix[6] = (0.0, 0.0, 1023.0)
+                pix[9] = (0.0, 0.0, 1023.0)
+                pix[10] = (0.0, 0.0, 1023.0)
+
+                for i in xrange(24):
+                    currentPixels[i] = pix[i]
+
+                out.write(pix)
+
+
+                conn.close()
+                
+                
+                serv.listen(5)   
+                print 'listening...'
+
+                conn,addr = serv.accept()
+                print '...connected!'
+    
+                for i in xrange(24):
+                    pix[i] = (1023.0, 0.0, 0.0)
+    
+                pix[5] = (0.0, 1023.0, 0.0)
+                pix[6] = (0.0, 1023.0, 0.0)
+                pix[9] = (0.0, 1023.0, 0.0)
+                pix[10] = (0.0, 1023.0, 0.0)
+    
+                for i in xrange(24):
+                    currentPixels[i] = pix[i]
+    
+                out.write(pix)
+        
+                    #time.sleep(sleepTime)
+            
+            out.write(currentPixels)
+        
+        
+        else: 
+            print "Not ready"
+            out.write(currentPixels)
+
         #pixel = [tuple(s.split()) for s in data.split("//")]
         
 #print pix
         #for i in xrange(24):
         #pix[i] = pixel
-        out.write(pix)
-    
-    conn.close()
