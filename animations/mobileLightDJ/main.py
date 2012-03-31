@@ -30,13 +30,7 @@ if __name__ == "__main__":
     conn,addr = serv.accept()
     print '...connected!'
     
-    for i in xrange(24):
-        pix[i] = (1023.0, 0.0, 0.0)
-    
-    pix[5] = (0.0, 1023.0, 0.0)
-    pix[6] = (0.0, 1023.0, 0.0)
-    pix[9] = (0.0, 1023.0, 0.0)
-    pix[10] = (0.0, 1023.0, 0.0)
+    pix = scripts.showSuccessfulConnection(pix)
 
     for i in xrange(24):
         currentPixels[i] = pix[i]
@@ -53,13 +47,27 @@ if __name__ == "__main__":
             updatePix = False
             message = data.split("//")[0]
             print message
+            
             if message == "makeAllPixels":
                 pix = scripts.makeAllPixels(pix, data.split("//")[1])
+                updatePix = True
+            
+            if message == "makePixel":
+                pix = scripts.makePixel(pix, data.split("//")[1])
                 updatePix = True
     
             if updatePix:
                 for i in xrange(24):
                     currentPixels[i] = pix[i]
+        
+            if message == "turnOffAll":
+                currentPixels = scripts.turnOffAll(currentPixels)
+                        
+            if message == "turnOnAll":
+                currentPixels = scripts.turnOnAll(pix, currentPixels)
+        
+            if message == "flashAllLights":
+                currentPixels = scripts.flashAll(currentPixels)
         
             if message == "turnOn": 
                 messageData = data.split("//")[1]
@@ -70,20 +78,12 @@ if __name__ == "__main__":
                 currentPixels = scripts.turnOff(currentPixels, int(messageData))
     
             if message == "closeConnection": 
-                for i in xrange(24):
-                    pix[i] = (1023.0, 0.0, 0.0)
-
-                pix[5] = (0.0, 0.0, 1023.0)
-                pix[6] = (0.0, 0.0, 1023.0)
-                pix[9] = (0.0, 0.0, 1023.0)
-                pix[10] = (0.0, 0.0, 1023.0)
+                pix = scripts.showErrorInConnection(pix)
 
                 for i in xrange(24):
                     currentPixels[i] = pix[i]
 
                 out.write(pix)
-
-
                 conn.close()
                 
                 
@@ -93,13 +93,7 @@ if __name__ == "__main__":
                 conn,addr = serv.accept()
                 print '...connected!'
     
-                for i in xrange(24):
-                    pix[i] = (1023.0, 0.0, 0.0)
-    
-                pix[5] = (0.0, 1023.0, 0.0)
-                pix[6] = (0.0, 1023.0, 0.0)
-                pix[9] = (0.0, 1023.0, 0.0)
-                pix[10] = (0.0, 1023.0, 0.0)
+                pix = scripts.showSuccessfulConnection(pix)
     
                 for i in xrange(24):
                     currentPixels[i] = pix[i]
