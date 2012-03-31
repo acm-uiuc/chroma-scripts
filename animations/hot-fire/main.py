@@ -34,12 +34,13 @@ if __name__ == "__main__":
             i = random.randint(0,MAX_BULBS -1)
         
             # make so that a pixel never gets replaced by one of lower saturation:
-            floorOfSat = floor(max(70,hsv[i][1]))
-            sat = random.randint(floorOfSat,100)
+            floorOfSat = floor(max(85,hsv[i][1]))
+            # sat = random.randint(floorOfSat,100)
+            sat = 100
         
             # secs = time.localtime().tm_sec
-            hue = random.gauss(35.0,5.0) % 360
-            lum = random.randint(95,100)
+            hue = random.gauss(20.0,5.0) % 360
+            lum = random.randint(98,100)
             fun = 0.0
         
             hsv[i] = (hue,sat,lum,fun)
