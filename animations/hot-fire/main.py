@@ -11,7 +11,7 @@ MAX_BULBS = 24
 fps = 60.0
 
 # numerical rate is in % points/second
-falloffRate = 15.0 /fps
+falloffRate = 13.0 /fps
 
 if __name__ == "__main__":
     # writing pixel values every time:
@@ -26,25 +26,24 @@ if __name__ == "__main__":
     # because ColorsOut() is of course, 10-bit rgb
     pixOut = [(0.0,0.0,0.0)] * MAX_BULBS
     
-    loopCounter = 0
     # main loop:
     while True:
-        loopCounter += 1
         # using Kevin's "raindrop" algorithm:
-        if random.randint(0,5) < 4 and loopCounter %5 == 0:
-            for x in xrange(random.randint(1,6)):
-                i = random.randint(0,MAX_BULBS -1)
-            
-                # make so that a pixel never gets replaced by one of lower saturation:
-                floorOfSat = floor(max(40,hsv[i][1]))
-                sat = random.randint(floorOfSat,100)
-            
-                # secs = time.localtime().tm_sec
-                hue = random.gauss(35.0,5.0) % 360
-                lum = random.randint(95,100)
-                fun = 0.0
-            
-                hsv[i] = (hue,sat,lum,fun)
+        # Make some rain
+        if random.randint(0,5) < 3:
+            i = random.randint(0,MAX_BULBS -1)
+        
+            # make so that a pixel never gets replaced by one of lower saturation:
+            floorOfSat = floor(max(85,hsv[i][1]))
+            # sat = random.randint(floorOfSat,100)
+            sat = 100
+        
+            # secs = time.localtime().tm_sec
+            hue = random.gauss(20.0,5.0) % 360
+            lum = random.randint(98,100)
+            fun = 0.0
+        
+            hsv[i] = (hue,sat,lum,fun)
         
         # make the saturation fall out with time
         # (could do something with hue and luminance too):
