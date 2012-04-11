@@ -2,6 +2,7 @@
 from osc import OSCServer, OSCClient, OSCMessage
 import sys
 import time
+import itertools
 # funny python's way to add a method to an instance of a class
 import types
 # for some awesome hacking to get the name of the script
@@ -11,47 +12,107 @@ def handle_timeout(self):
     self.timed_out = True
 
 CLEAR_TIME = 5 #5 seconds before it clears stuff
+STAGING = True #don't do the actual writing. also print shit out.
 
 def clamp(x):
     return max(0.0, min(x, 1023.0))
 
-class ColorsIn:
-# this method of reporting timeouts only works by convention
-# that before calling handle_request() field .timed_out is 
-# set to False
+def clampColor(color):
+    return (clamp(color[0]), clamp(color[1]), clamp(color[2]))
 
+def sum(c1, c2):
+    return (c1[0]+c2[0], c1[1]+c2[1], c1[2]+c2[2])
+
+def mult(c1, val):
+    return (c1[0]*val, c1[1]*val, c1[2]*val)
+
+class ColorsIn:
+    fadeoutfactor = 0.98
+    bootthreshold = 0.01
+    maxlayers = 3
 
     def set_colors(self,path, tags, args, source):
-        chroma = ChromaMessage.fromOSC(tags,args)
-        pixels = chroma.data
-        #print "Pixels: %s"%str(pixels)
-        #print "Time: "+str((time.time()*1000) % 10000)
-        octoapi.write(pixels)
-        self.lastwrite=time.time()
-        self.server.lastpixels = pixels
+        try:
+            chroma = ChromaMessage.fromOSC(tags,args)
+            pixels = chroma.data
 
-    def diff_colors(self, path, tags, args, source):
-        # which user will be determined by path:
-        # we just throw away all slashes and join together what's left
-        #print "Here's what we got : path:%s tags:%s args:%s source:%s"%(str(path),str(tags),str(args),str(source))
-        pixels = server.lastpixels
-        for i in range(0,len(args)/3):
-            pp = (args[i*3],args[i*3+1],args[i*3+2])
-            p = pixels[i]
-            pixels[i] = (clamp(p[0]+pp[0]), clamp(p[1]+pp[1]), clamp(p[2]+pp[2]))
-        #print "Pixels: %s"%str(pixels)
-        #print "Time: "+str((time.time()*1000) % 10000)
-        octoapi.write(pixels)
-        self.lastwrite=time.time()
-        self.server.lastpixels = pixels
+            #if we already have a record of this stream, or have no records of any streams:
+            if not self.activepid or chroma.pid == self.activepid:
+                self.activepid = chroma.pid
+                self.layers[chroma.pid] = (chroma,1) #(object,opacity)
+            #if we have a record of a current stream, and no record of this stream:
+            elif chroma.pid not in self.layers:
+                self.activepid = chroma.pid #all hail the new king
+                self.layers[chroma.pid] = (chroma,1) #(object,opacity)
+
+            #in any case, we slowly fade out every stream remaining
+            #this also writes to the device
+            self.updateStream()
+            #mark the last time we got a packet
+            self.lastwrite=time.time()
+        except:
+            import traceback
+            traceback.print_exc()
+
+    """
+        applies fadeout rules to any stream not the main one
+        and writes to the device
+    """
+    def updateStream(self):
+        todelete = []
+        for otherpid in self.layers:
+            (otherchroma,opacity) = self.layers[otherpid]
+            #if this isn't the main stream, fade it out
+            if otherchroma.pid != self.activepid:
+                opacity = opacity * self.fadeoutfactor
+            if opacity < self.bootthreshold and len(self.layers) > self.maxlayers:
+                todelete.append(otherpid)
+            else:
+                self.layers[otherpid] = (otherchroma, opacity)
+        for pid in todelete:
+            del self.layers[pid]
+        #apply our opacity rules
+        pixels = self.applyOpacity(self.layers.values())
+        if not STAGING:
+            octoapi.write(pixels)
+        else:
+            for otherpid in self.layers:
+                (otherchroma,opacity) = self.layers[otherpid]
+                print "PID: %d, OPACITY: %f"%(otherpid, opacity)
+
+
+    """
+        compresses down the entire list and gives us the final result
+    """
+    def applyOpacity(self,chromaandopacity):
+        data = [(0.0,0.0,0.0)] * len(chromaandopacity[0][0].data)
+        for (chroma,opacity) in chromaandopacity:
+            data = [sum(currentvalue,mult(value,opacity)) for currentvalue,value in itertools.izip(data,chroma.data)]
+        data = [clampColor(value) for value in data]
+        return data
+
+    def handleClearing(self):
+        if time.time() - self.lastwrite > CLEAR_TIME and time.time() - self.lastclear > 1/30.0:
+            #print "CLEARING! %f"%time.time()
+            self.activepid = 0
+            shouldweupdate = False
+            #don't bother updating if we're below the threshold. not often anyway.
+            for (chroma,opacity) in self.layers.values():
+                if opacity > self.bootthreshold:
+                    shouldweupdate = True
+            if shouldweupdate: 
+                self.updateStream()
+            else:
+                if not STAGING: 
+                    octoapi.write([(0,0,0)]*24)
+                else:
+                    print "CLEARED! %f"%time.time()
+            self.lastclear = time.time()
 
     def each_frame(self):
         self.server.timed_out = False
         while not self.server.timed_out:
-            if time.time() - self.lastwrite > CLEAR_TIME:
-                self.lastwrite = time.time()
-                octoapi.write([(0,0,0)]*24)
-                print "Clearing"
+            self.handleClearing()
             self.server.handle_request()
 
     def start(self):
@@ -62,17 +123,17 @@ class ColorsIn:
         self.server.handle_timeout = types.MethodType(handle_timeout, self.server)
         self.server.lastpixels = [(0,0,0)]*24
 
+        self.layers = {}
+        self.activepid = 0
+        self.lastclear = time.time()
+
         self.server.addMsgHandler( "/setcolors", self.set_colors)
-        self.server.addMsgHandler( "/diffcolors", self.diff_colors)
         while True:
             self.each_frame()
 
         self.server.close()
 
 
-if __name__ == "__main__":
-    import octoapi
-    ColorsIn().start()
 
 
 """
@@ -83,24 +144,28 @@ The Chroma OSC Message structure:
         name of animation (string)
         class of stream (string)
         framenumber (int)
+        timestamp
         ---reserved for future use---
     DATA
         72 Floats
 """
 class ChromaMessage:
-    def __init__(self, data, title, streamclass, framenumber):
+    def __init__(self, data, title, streamclass, framenumber, timestamp=0, pid=0):
         self.data = data
         self.title = title
         self.streamclass = streamclass
         self.framenumber = framenumber
+        self.timestamp = timestamp
+        self.pid = pid
 
     def toOSC(self, messagename):
         message = OSCMessage(messagename)
-        message.append(5)
+        message.append(6)
         message.append(os.getpid())
         message.append(self.title)
         message.append(self.streamclass)
         message.append(self.framenumber)
+        message.append(time.time())
         message.append(self.data)
         return message
 
@@ -111,12 +176,13 @@ class ChromaMessage:
         name = args[2]
         streamclass = args[3]
         framenumber = args[4]
+        timestamp = args[5]
         pixels = []
-        for i in range(0,len(args)/3):
+        for i in range(0,(len(args)-headerlength)/3):
             pixel = (clamp(args[i*3+headerlength]), clamp(args[i*3+1+headerlength]), clamp(args[i*3+2+headerlength]))
             pixels.append( pixel )
-        return ChromaMessage(data,name,streamclass,framenumber)
-        
+        return ChromaMessage(pixels,name,streamclass,framenumber, timestamp, pid)
+    
 
 
 
@@ -177,3 +243,25 @@ class ColorsOut:
 
 
         return pixels2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+if __name__ == "__main__":
+    if not STAGING:
+        import octoapi
+    ColorsIn().start()
