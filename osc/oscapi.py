@@ -12,7 +12,7 @@ def handle_timeout(self):
     self.timed_out = True
 
 CLEAR_TIME = 5 #5 seconds before it clears stuff
-STAGING = True #don't do the actual writing. also print shit out.
+STAGING = False #don't do the actual writing. also print shit out.
 DEBUG = True 
 
 def clampv(low,x,high):
@@ -33,9 +33,9 @@ def mult(c1, val):
     return (c1[0]*val, c1[1]*val, c1[2]*val)
 
 class ColorsIn:
-    #measured in value per 1/30 sec
-    fadeoutrate = 0.01
-    fadeinrate = 0.01
+    #measured in % per second
+    fadeoutrate = 1.0
+    fadeinrate = 1.0
     bootthreshold = 0.01
     maxlayers = 3
 
@@ -70,8 +70,8 @@ class ColorsIn:
     def updateStream(self):
         for layer in self.layers.values():
             self.applyFadingRules(layer)
-        #if len(self.layers) > ColorsIn.maxlayers:
-        #    self.layers = dict( (k, v) for k,v in self.layers.iteritems() if self.shouldWeKeepLayer(v) )
+        if len(self.layers) > ColorsIn.maxlayers:
+            self.layers = dict( (k, v) for k,v in self.layers.iteritems() if self.shouldWeKeepLayer(v) )
         #apply our opacity rules
         pixels = self.applyOpacity(self.layers.values())
         if not STAGING:
@@ -79,6 +79,7 @@ class ColorsIn:
         if DEBUG:
             for layer in self.layers.values():
                 print "PID: %d, OPACITY: %f"%(layer.chroma.pid, layer.opacity)
+        self.lastwriteany=time.time()
 
     def shouldWeKeepLayer(self,layer):
         if layer.state == Layer.FADEOUT and layer.opacity < self.bootthreshold:
@@ -86,10 +87,13 @@ class ColorsIn:
         return True
 
     def applyFadingRules(self,layer):
+        diff = self.lastwriteany - time.time()
+        fadein = ColorsIn.fadeinrate * diff
+        fadeout = ColorsIn.fadeoutrate * diff
         if layer.state == Layer.FADEIN:
-            layer.opacity += ColorsIn.fadeinrate
+            layer.opacity += fadein 
         if layer.state == Layer.FADEOUT:
-            layer.opacity -= ColorsIn.fadeoutrate
+            layer.opacity -= fadeout 
         layer.opacity = clampv(0,layer.opacity,1)
         return layer
 
@@ -139,6 +143,7 @@ class ColorsIn:
         self.layers = {}
         self.activepid = 0
         self.lastclear = time.time()
+        self.lastwriteany = time.time()
 
         self.server.addMsgHandler( "/setcolors", self.set_colors)
         while True:
