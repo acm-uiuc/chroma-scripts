@@ -13,6 +13,7 @@ def handle_timeout(self):
 
 CLEAR_TIME = 5 #5 seconds before it clears stuff
 STAGING = False #don't do the actual writing. also print shit out.
+DEBUG = True 
 
 def clampv(low,x,high):
     return max(low, min(x, high))
@@ -72,7 +73,7 @@ class ColorsIn:
         pixels = self.applyOpacity(self.layers.values())
         if not STAGING:
             octoapi.write(pixels)
-        else:
+        if DEBUG:
             for layer in self.layers.values():
                 print "PID: %d, OPACITY: %f"%(layer.chroma.pid, layer.opacity)
 
@@ -114,7 +115,7 @@ class ColorsIn:
             else:
                 if not STAGING: 
                     octoapi.write([(0,0,0)]*24)
-                else:
+                if DEBUG:
                     print "CLEARED! %f"%time.time()
             self.lastclear = time.time()
 
