@@ -33,9 +33,9 @@ def mult(c1, val):
     return (c1[0]*val, c1[1]*val, c1[2]*val)
 
 class ColorsIn:
-    #measured in % per second
-    fadeoutrate = 1.0
-    fadeinrate = 1.0
+    #measured in seconds to fade in 100%
+    fadeoutrate = 4.0
+    fadeinrate = 4.0
     bootthreshold = 0.01
     maxlayers = 3
 
@@ -51,6 +51,7 @@ class ColorsIn:
                 for pid in self.layers:
                     self.layers[pid].state = Layer.FADEOUT
                 self.layers[chroma.pid] = Layer(chroma, 0, Layer.FADEIN)
+                self.lastwriteany = time.time() - 1/30.0 #force this frame to fade in at the target framerate: 30fps
 
             self.layers[chroma.pid].chroma = chroma
 
@@ -87,7 +88,8 @@ class ColorsIn:
         return True
 
     def applyFadingRules(self,layer):
-        diff = self.lastwriteany - time.time()
+        diff = time.time() - self.lastwriteany
+        print diff
         fadein = ColorsIn.fadeinrate * diff
         fadeout = ColorsIn.fadeoutrate * diff
         if layer.state == Layer.FADEIN:
@@ -143,7 +145,7 @@ class ColorsIn:
         self.layers = {}
         self.activepid = 0
         self.lastclear = time.time()
-        self.lastwriteany = time.time()
+        self.lastwriteany = 0
 
         self.server.addMsgHandler( "/setcolors", self.set_colors)
         while True:
