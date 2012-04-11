@@ -12,7 +12,7 @@ def handle_timeout(self):
     self.timed_out = True
 
 CLEAR_TIME = 5 #5 seconds before it clears stuff
-STAGING = True #don't do the actual writing. also print shit out.
+STAGING = False #don't do the actual writing. also print shit out.
 
 def clampv(low,x,high):
     return max(low, min(x, high))
