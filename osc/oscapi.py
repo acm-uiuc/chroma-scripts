@@ -4,6 +4,8 @@ import sys
 import time
 # funny python's way to add a method to an instance of a class
 import types
+# for some awesome hacking to get the name of the script
+import os
 
 def handle_timeout(self):
     self.timed_out = True
@@ -20,13 +22,8 @@ class ColorsIn:
 
 
     def set_colors(self,path, tags, args, source):
-        # which user will be determined by path:
-        # we just throw away all slashes and join together what's left
-        #print "Here's what we got : path:%s tags:%s args:%s source:%s"%(str(path),str(tags),str(args),str(source))
-        pixels = []
-        for i in range(0,len(args)/3):
-            pixel = (clamp(args[i*3]), clamp(args[i*3+1]), clamp(args[i*3+2]))
-            pixels.append( pixel )
+        chroma = ChromaMessage.fromOSC(tags,args)
+        pixels = chroma.data
         #print "Pixels: %s"%str(pixels)
         #print "Time: "+str((time.time()*1000) % 10000)
         octoapi.write(pixels)
@@ -78,25 +75,69 @@ if __name__ == "__main__":
     ColorsIn().start()
 
 
+"""
+The Chroma OSC Message structure:
+    HEADER
+        header length (1 int, in number of messages, not bytes)
+        pid (int)
+        name of animation (string)
+        class of stream (string)
+        framenumber (int)
+        ---reserved for future use---
+    DATA
+        72 Floats
+"""
+class ChromaMessage:
+    def __init__(self, data, title, streamclass, framenumber):
+        self.data = data
+        self.title = title
+        self.streamclass = streamclass
+        self.framenumber = framenumber
+
+    def toOSC(self, messagename):
+        message = OSCMessage(messagename)
+        message.append(5)
+        message.append(os.getpid())
+        message.append(self.title)
+        message.append(self.streamclass)
+        message.append(self.framenumber)
+        message.append(self.data)
+        return message
+
+    @staticmethod
+    def fromOSC(tags, args):
+        headerlength = args[0]
+        pid = args[1]
+        name = args[2]
+        streamclass = args[3]
+        framenumber = args[4]
+        pixels = []
+        for i in range(0,len(args)/3):
+            pixel = (clamp(args[i*3+headerlength]), clamp(args[i*3+1+headerlength]), clamp(args[i*3+2+headerlength]))
+            pixels.append( pixel )
+        return ChromaMessage(data,name,streamclass,framenumber)
+        
+
+
+
 
 class ColorsOut:
 
-    def __init__(self):
+    def __init__(self, title="demo", streamclass="something"):
         self.client = OSCClient()
         self.client.connect( ("localhost",11661) )
+        self.title = title 
+        self.framenumber = 0
+        self.streamclass = streamclass
 
     def write(self, pixels):
-        message = OSCMessage("/setcolors")
         pixels = self.crazyMofoingReorderingOfLights(pixels)
-        message.append(pixels)
+        chroma = ChromaMessage(pixels, self.title, self.streamclass, self.framenumber)
+        message = chroma.toOSC("/setcolors")
         self.client.send( message )
-    
-    def diff(self, pixels):
-        message = OSCMessage("/diffcolors")
-        message.append(pixels)
-        self.client.send( message )
+        self.framenumber += 1
 
-        
+
 
     def crazyMofoingReorderingOfLights(self, pixels):
         pixels2 = pixels[:] #make a copy so we don't kerplode someone's work
