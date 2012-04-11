@@ -90,8 +90,8 @@ class ColorsIn:
     def applyFadingRules(self,layer):
         diff = time.time() - self.lastwriteany
         print diff
-        fadein = ColorsIn.fadeinrate * diff
-        fadeout = ColorsIn.fadeoutrate * diff
+        fadein = (1.0/ColorsIn.fadeinrate) * diff
+        fadeout = (1.0/ColorsIn.fadeoutrate) * diff
         if layer.state == Layer.FADEIN:
             layer.opacity += fadein 
         if layer.state == Layer.FADEOUT:
