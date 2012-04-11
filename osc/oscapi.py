@@ -14,6 +14,9 @@ def handle_timeout(self):
 CLEAR_TIME = 5 #5 seconds before it clears stuff
 STAGING = True #don't do the actual writing. also print shit out.
 
+def clampv(low,x,high):
+    return max(low, min(x, high))
+
 def clamp(x):
     return max(0.0, min(x, 1023.0))
 
@@ -27,7 +30,9 @@ def mult(c1, val):
     return (c1[0]*val, c1[1]*val, c1[2]*val)
 
 class ColorsIn:
-    fadeoutfactor = 0.98
+    #measured in value per 1/30 sec
+    fadeoutrate = 0.01
+    fadeinrate = 0.01
     bootthreshold = 0.01
     maxlayers = 3
 
@@ -36,14 +41,14 @@ class ColorsIn:
             chroma = ChromaMessage.fromOSC(tags,args)
             pixels = chroma.data
 
-            #if we already have a record of this stream, or have no records of any streams:
-            if not self.activepid or chroma.pid == self.activepid:
-                self.activepid = chroma.pid
-                self.layers[chroma.pid] = (chroma,1) #(object,opacity)
+            #if we have no records of any streams:
             #if we have a record of a current stream, and no record of this stream:
-            elif chroma.pid not in self.layers:
-                self.activepid = chroma.pid #all hail the new king
-                self.layers[chroma.pid] = (chroma,1) #(object,opacity)
+            if not self.activepid or chroma.pid not in self.layers:
+                self.activepid = chroma.pid
+                #mark all other layers as fading out
+                for pid in self.layers:
+                    self.layers[pid].state = Layer.FADEOUT
+                self.layers[chroma.pid] = Layer(chroma, 0, Layer.FADEIN)
 
             #in any case, we slowly fade out every stream remaining
             #this also writes to the device
@@ -59,35 +64,38 @@ class ColorsIn:
         and writes to the device
     """
     def updateStream(self):
-        todelete = []
-        for otherpid in self.layers:
-            (otherchroma,opacity) = self.layers[otherpid]
-            #if this isn't the main stream, fade it out
-            if otherchroma.pid != self.activepid:
-                opacity = opacity * self.fadeoutfactor
-            if opacity < self.bootthreshold and len(self.layers) > self.maxlayers:
-                todelete.append(otherpid)
-            else:
-                self.layers[otherpid] = (otherchroma, opacity)
-        for pid in todelete:
-            del self.layers[pid]
+        for layer in self.layers.values():
+            self.applyFadingRules(layer)
+        if len(self.layers) > ColorsIn.maxlayers:
+            self.layers = dict( (k, v) for k,v in self.layers.iteritems() if self.shouldWeKeepLayer(v) )
         #apply our opacity rules
         pixels = self.applyOpacity(self.layers.values())
         if not STAGING:
             octoapi.write(pixels)
         else:
-            for otherpid in self.layers:
-                (otherchroma,opacity) = self.layers[otherpid]
-                print "PID: %d, OPACITY: %f"%(otherpid, opacity)
+            for layer in self.layers.values():
+                print "PID: %d, OPACITY: %f"%(layer.chroma.pid, layer.opacity)
 
+    def shouldWeKeepLayer(self,layer):
+        if layer.state == Layer.FADEOUT and layer.opacity < self.bootthreshold:
+            return False
+        return True
+
+    def applyFadingRules(self,layer):
+        if layer.state == Layer.FADEIN:
+            layer.opacity += ColorsIn.fadeinrate
+        if layer.state == Layer.FADEOUT:
+            layer.opacity -= ColorsIn.fadeoutrate
+        layer.opacity = clampv(0,layer.opacity,1)
+        return layer
 
     """
         compresses down the entire list and gives us the final result
     """
-    def applyOpacity(self,chromaandopacity):
-        data = [(0.0,0.0,0.0)] * len(chromaandopacity[0][0].data)
-        for (chroma,opacity) in chromaandopacity:
-            data = [sum(currentvalue,mult(value,opacity)) for currentvalue,value in itertools.izip(data,chroma.data)]
+    def applyOpacity(self,layers):
+        data = [(0.0,0.0,0.0)] * len(layers[0].chroma.data)
+        for layer in layers:
+            data = [sum(currentvalue,mult(value,layer.opacity)) for currentvalue,value in itertools.izip(data,layer.chroma.data)]
         data = [clampColor(value) for value in data]
         return data
 
@@ -95,10 +103,11 @@ class ColorsIn:
         if time.time() - self.lastwrite > CLEAR_TIME and time.time() - self.lastclear > 1/30.0:
             #print "CLEARING! %f"%time.time()
             self.activepid = 0
+            for layer in self.layers.values(): layer.state = Layer.FADEOUT
             shouldweupdate = False
             #don't bother updating if we're below the threshold. not often anyway.
-            for (chroma,opacity) in self.layers.values():
-                if opacity > self.bootthreshold:
+            for layer in self.layers.values():
+                if layer.opacity > self.bootthreshold:
                     shouldweupdate = True
             if shouldweupdate: 
                 self.updateStream()
@@ -134,6 +143,14 @@ class ColorsIn:
         self.server.close()
 
 
+class Layer:
+    FADEIN = 1
+    FADEOUT = -1
+
+    def __init__(self, chroma, opacity, state):
+        self.chroma = chroma
+        self.opacity = opacity
+        self.state = state
 
 
 """
