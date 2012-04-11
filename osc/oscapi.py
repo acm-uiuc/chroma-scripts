@@ -12,7 +12,7 @@ def handle_timeout(self):
     self.timed_out = True
 
 CLEAR_TIME = 5 #5 seconds before it clears stuff
-STAGING = False #don't do the actual writing. also print shit out.
+STAGING = True #don't do the actual writing. also print shit out.
 DEBUG = True 
 
 def clampv(low,x,high):
@@ -25,9 +25,11 @@ def clampColor(color):
     return (clamp(color[0]), clamp(color[1]), clamp(color[2]))
 
 def sum(c1, c2):
+    #print "mult %s,%s"%(str(c1),str(c2))
     return (c1[0]+c2[0], c1[1]+c2[1], c1[2]+c2[2])
 
 def mult(c1, val):
+    #print "mult %s, val: %s"%(str(c1),str(val))
     return (c1[0]*val, c1[1]*val, c1[2]*val)
 
 class ColorsIn:
@@ -40,7 +42,6 @@ class ColorsIn:
     def set_colors(self,path, tags, args, source):
         try:
             chroma = ChromaMessage.fromOSC(tags,args)
-            pixels = chroma.data
 
             #if we have no records of any streams:
             #if we have a record of a current stream, and no record of this stream:
@@ -50,6 +51,8 @@ class ColorsIn:
                 for pid in self.layers:
                     self.layers[pid].state = Layer.FADEOUT
                 self.layers[chroma.pid] = Layer(chroma, 0, Layer.FADEIN)
+
+            self.layers[chroma.pid].chroma = chroma
 
             #in any case, we slowly fade out every stream remaining
             #this also writes to the device
@@ -67,8 +70,8 @@ class ColorsIn:
     def updateStream(self):
         for layer in self.layers.values():
             self.applyFadingRules(layer)
-        if len(self.layers) > ColorsIn.maxlayers:
-            self.layers = dict( (k, v) for k,v in self.layers.iteritems() if self.shouldWeKeepLayer(v) )
+        #if len(self.layers) > ColorsIn.maxlayers:
+        #    self.layers = dict( (k, v) for k,v in self.layers.iteritems() if self.shouldWeKeepLayer(v) )
         #apply our opacity rules
         pixels = self.applyOpacity(self.layers.values())
         if not STAGING:
