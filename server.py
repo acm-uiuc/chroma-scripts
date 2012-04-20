@@ -5,22 +5,28 @@ import subprocess
 import signal
 import simplejson as json
 
+p = None
+
 class Serv:
+   def __turn_off(self):
+      global p
+      if p:
+         os.kill(p.pid, signal.SIGTERM)
+   
    @http.expose
    def play(self, animation):
       global p
-      global current
-      if p:
-         os.kill(p.pid, signal.SIGTERM)
-      if animation == "Off":
-         current = "Off"
-         return "Turned off"
+      self.__turn_off()
       animations  = os.listdir('./animations/')
       if animation in animations:
          p = subprocess.Popen(['env','PYTHONPATH=./osc:$PYTHONPATH','python','animations/%s/main.py'%animation])
-         current = animation
          return "Animation %s started"%animation
       return "Unknown animation %s"%animation
+      
+   @http.expose
+   def off(self):
+      self.__turn_off()
+      return "Turned off"
 
    @http.expose
    def pull(self):
@@ -31,11 +37,11 @@ class Serv:
          if not line: break
          output += line + '\n'
       animations  = os.listdir('./animations/')
-      aData = []
+      aData = {}
       for a in animations:
          json_data=open('animations/%s/manifest.json'%a)
          data = json.load(json_data)
-         aData.append(data)
+         aData[a] = data
          json_data.close()
       ret_data = {'output':output, "animations":aData}
       return json.dumps(ret_data)
