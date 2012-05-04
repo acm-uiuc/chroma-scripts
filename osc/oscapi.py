@@ -77,7 +77,7 @@ class ColorsIn:
         pixels = self.applyOpacity(self.layers.values())
         if not STAGING:
             self.streamer.pixels = pixels
-            pixels = self.crazyMofoingReorderingOfLights(pixels)
+            #pixels = self.crazyMofoingReorderingOfLights(pixels)
             octoapi.write(pixels)
         if DEBUG:
             for layer in self.layers.values():
