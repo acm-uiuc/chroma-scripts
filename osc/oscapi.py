@@ -268,10 +268,10 @@ class StreamPoster( threading.Thread):
     def run(self):
         self.pixels = []
         self.keepRunning = True
-	self.data = None
+	self.metadata = None
 	while self.keepRunning:
-	   if self.data:
-	       jsondata = simplejson.dumps({"colors":self.pixels, "framenum":self.data.framenumber, "title":self.data.title})
+	   if self.metadata:
+	       jsondata = simplejson.dumps({"colors":self.pixels, "framenum":self.metadata.framenumber, "title":self.metadata.title})
                print "Sending to server: %s data: %s"%(streamurl, jsondata)
                urllib2.urlopen(streamurl, "data="+jsondata)
            time.sleep(1.0/12.0)
