@@ -76,6 +76,7 @@ class ColorsIn:
         #apply our opacity rules
         pixels = self.applyOpacity(self.layers.values())
         if not STAGING:
+            self.streamer.pixels = pixels
             octoapi.write(pixels)
         if DEBUG:
             for layer in self.layers.values():
@@ -147,6 +148,9 @@ class ColorsIn:
         self.lastclear = time.time()
         self.lastwriteany = 0
 
+        self.streamer = StreamPoster()
+        self.streamer.start()
+
         self.server.addMsgHandler( "/setcolors", self.set_colors)
         while True:
             self.each_frame()
@@ -211,6 +215,25 @@ class ChromaMessage:
             pixels.append( pixel )
         return ChromaMessage(pixels,name,streamclass,framenumber, timestamp, pid)
     
+
+
+
+import threading
+import urllib2
+import simplejson
+import time
+streamurl = "http://lab2.acm.uiuc.edu:8009/sendstream"
+class StreamPoster( threading.Thread):
+    
+    def run(self):
+        self.pixels = []
+        self.keepRunning = True
+	while self.keepRunning:
+           jsondata = simplejson.dumps({"colors":self.pixels})
+           print "Sending to server: %s data: %s"%(streamurl, jsondata)
+           urllib2.urlopen(streamurl, "data="+jsondata)
+           time.sleep(0.1)
+ 
 
 
 
@@ -290,6 +313,13 @@ class ColorsOut:
 
 
 if __name__ == "__main__":
+    import signal
+    import sys
     if not STAGING:
         import octoapi
-    ColorsIn().start()
+    colors = ColorsIn()
+    def signal_handler(signal, frame):
+        colors.streamer.keepRunning=False
+        sys.exit(0)
+    signal.signal(signal.SIGINT, signal_handler)
+    colors.start()
