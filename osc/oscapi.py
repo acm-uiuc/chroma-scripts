@@ -77,6 +77,7 @@ class ColorsIn:
         pixels = self.applyOpacity(self.layers.values())
         if not STAGING:
             self.streamer.pixels = pixels
+	    self.streamer.metadata = self.layers[self.activepid].chroma
             #pixels = self.crazyMofoingReorderingOfLights(pixels)
             octoapi.write(pixels)
         if DEBUG:
@@ -268,10 +269,11 @@ class StreamPoster( threading.Thread):
         self.pixels = []
         self.keepRunning = True
 	while self.keepRunning:
-           jsondata = simplejson.dumps({"colors":self.pixels})
-           print "Sending to server: %s data: %s"%(streamurl, jsondata)
-           urllib2.urlopen(streamurl, "data="+jsondata)
-           time.sleep(0.1)
+	   if self.data:
+	       jsondata = simplejson.dumps({"colors":self.pixels, "framenum":self.data.framenumber, "title":self.data.title})
+               print "Sending to server: %s data: %s"%(streamurl, jsondata)
+               urllib2.urlopen(streamurl, "data="+jsondata)
+           time.sleep(1.0/12.0)
  
 
 
