@@ -9,13 +9,18 @@
     $.each(colordata.colors, function(index,color) {
       $("#light-"+index).css("background-color","rgb("+Math.round(color[0]/4)+","+Math.round(color[1]/4)+","+Math.round(color[2]/4)+")");
     });
+    var color = colordata.colors[0];
+    $("#title h1").css("text-shadow","rgba("+Math.round(color[0]/4)+","+Math.round(color[1]/4)+","+Math.round(color[2]/4)+", 0.5) 0 0 0.5em");
+    $("#streamname").html(colordata.title);
+    $("#framenumber").html(colordata.framenum);
   });
   $(function() {
     for (var i=0; i<24; i++) {
-      $("#container").append("<div id='light-"+i+"' class='lights'></div>");
+      $("#lightscontainer").append("<div id='light-"+i+"' class='lights'></div>");
     }
   });
 </script>
+<link href='http://fonts.googleapis.com/css?family=Russo+One' rel='stylesheet' type='text/css'>
 <style type="text/css">
   .lights {
     float: left;
@@ -31,11 +36,54 @@
   }
   body {
     background-color:#000;
+    color: #999;
+    font-family: 'Russo One', sans-serif;
+    letter-spacing: 1px;
+    font-weight: 300;
+  }
+  h1 {
+    letter-spacing: 3px;
+    font-size: 49px;
+    overflow: hide;
+    font-weight: 300;
+    margin:0;
+    padding:0;
+    margin-bottom:10px;
+    text-shadow: rgba(255,255,255,1.5) 0 0 0.5em;
+  }
+  .streamname {
+    font-size: 30px;
+    float: left;
+    height:30px;
+  }
+  .framenumber {
+    font-size: 20px;
+    float: right;
+    padding-top:9px;
+    height:30px;
+    vertical-align: bottom;
+  }
+  #metadata {
+    height:30px;
+  }
+
+  #lightscontainer {
+    clear: both;
   }
 </style>
 </head>
 <body>
   <div id="container">
+    <div id="title">
+      <h1>Chroma Lights</h1>
+    </div>
+    <div id="metadata">
+      <div class='streamname' id="streamname"></div> <div class='framenumber' id='framenumber'></div>
+    </div>
+
+    <div id="lightscontainer">
+
+    </div>
     
   </div>
 
