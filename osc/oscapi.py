@@ -268,6 +268,7 @@ class StreamPoster( threading.Thread):
     def run(self):
         self.pixels = []
         self.keepRunning = True
+	self.data = None
 	while self.keepRunning:
 	   if self.data:
 	       jsondata = simplejson.dumps({"colors":self.pixels, "framenum":self.data.framenumber, "title":self.data.title})
