@@ -77,6 +77,7 @@ class ColorsIn:
         pixels = self.applyOpacity(self.layers.values())
         if not STAGING:
             self.streamer.pixels = pixels
+            pixels = self.crazyMofoingReorderingOfLights(pixels)
             octoapi.write(pixels)
         if DEBUG:
             for layer in self.layers.values():
@@ -134,6 +135,44 @@ class ColorsIn:
         while not self.server.timed_out:
             self.handleClearing()
             self.server.handle_request()
+
+
+    def crazyMofoingReorderingOfLights(self, pixels):
+        pixels2 = pixels[:] #make a copy so we don't kerplode someone's work
+        """
+        what are we expecting? we want the back left (by the couches) of the room to be pixel 0, 
+        and by the front is the last row
+        whereas in reality, it's the opposite.
+        here is the order it'd be nice to have them in:
+        
+        0  1  2  3
+        4  5  6  7
+        8  9  10 11
+        12 13 14 15
+        16 17 18 19
+        20 21 22 23
+
+        this is the actual order:   
+        23 22 21 20
+        19 16 17 18
+        15 14 13 12
+        11 10 9  8
+        3  2  5  4
+        6 *0**1**7*   *=not there
+        """
+
+        actualorder = [23,22,21,20,19,16,17,18,15,14,13,12,11,10,9,8,3,2,5,4,6,0,1,7]
+        badcolors = [] #3,2,5,4,6,0,1,7]
+        for i in range(len(actualorder)):
+            (r,g,b) = pixels[i]
+            r = max(0.0, min(r, 1023.0))
+            g = max(0.0, min(g, 1023.0))
+            b = max(0.0, min(b, 1023.0))
+            pixels2[actualorder[i]] = (r,g,b)
+        for i in range(len(badcolors)):
+            pixels2[badcolors[i]] = (0.0,0.0,0.0)
+        return pixels2
+
 
     def start(self):
         #server = OSCServer( ("128.174.251.39", 11661) )
@@ -248,7 +287,7 @@ class ColorsOut:
         self.streamclass = streamclass
 
     def write(self, pixels):
-        pixels = self.crazyMofoingReorderingOfLights(pixels)
+        #pixels = self.crazyMofoingReorderingOfLights(pixels)
         chroma = ChromaMessage(pixels, self.title, self.streamclass, self.framenumber)
         message = chroma.toOSC("/setcolors")
         self.client.send( message )
@@ -256,44 +295,6 @@ class ColorsOut:
 
 
 
-    def crazyMofoingReorderingOfLights(self, pixels):
-        pixels2 = pixels[:] #make a copy so we don't kerplode someone's work
-        """
-        what are we expecting? we want the back left (by the couches) of the room to be pixel 0, 
-        and by the front is the last row
-        whereas in reality, it's the opposite.
-        here is the order it'd be nice to have them in:
-        
-        0  1  2  3
-        4  5  6  7
-        8  9  10 11
-        12 13 14 15
-        16 17 18 19
-        20 21 22 23
-
-        this is the actual order:   
-        23 22 21 20
-        19 16 17 18
-        15 14 13 12
-        11 10 9  8
-        3  2  5  4
-        6 *0**1**7*   *=not there
-        """
-
-        actualorder = [23,22,21,20,19,16,17,18,15,14,13,12,11,10,9,8,3,2,5,4,6,0,1,7]
-        badcolors = [] #3,2,5,4,6,0,1,7]
-        for i in range(len(actualorder)):
-            (r,g,b) = pixels[i]
-            r = max(0.0, min(r, 1023.0))
-            g = max(0.0, min(g, 1023.0))
-            b = max(0.0, min(b, 1023.0))
-            pixels2[actualorder[i]] = (r,g,b)
-        for i in range(len(badcolors)):
-            pixels2[badcolors[i]] = (0.0,0.0,0.0)
-
-
-
-        return pixels2
 
 
 
