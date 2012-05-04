@@ -1,0 +1,42 @@
+<html lang="en">
+<head>
+<script src="http://lab2.acm.uiuc.edu:8009/socket.io/socket.io.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script>
+  var socket = io.connect('http://lab2.acm.uiuc.edu:8009');
+  socket.on('stream', function (data) {
+    var colordata = $.parseJSON(data.data);
+    $.each(colordata.colors, function(index,color) {
+      $("#light-"+index).css("background-color","rgb("+Math.round(color[0]/4)+","+Math.round(color[1]/4)+","+Math.round(color[2]/4)+")");
+    });
+  });
+  $(function() {
+    for (var i=0; i<24; i++) {
+      $("#container").append("<div id='light-"+i+"' class='lights'></div>");
+    }
+  });
+</script>
+<style type="text/css">
+  .lights {
+    float: left;
+    width: 100px;
+    height: 100px;
+  }
+  #container {
+    margin-left: auto;
+    margin-right: auto;
+    width:400px;
+    background-color:#000;
+    margin-top: 50px;
+  }
+  body {
+    background-color:#000;
+  }
+</style>
+</head>
+<body>
+  <div id="container">
+    
+  </div>
+
+</body>
