@@ -13,7 +13,7 @@ def handle_timeout(self):
 
 CLEAR_TIME = 5 #5 seconds before it clears stuff
 STAGING = False #don't do the actual writing. also print shit out.
-DEBUG = True 
+DEBUG = False 
 
 def clampv(low,x,high):
     return max(low, min(x, high))
@@ -278,7 +278,7 @@ class StreamPoster( threading.Thread):
 	while self.keepRunning:
 	   if self.metadata:
 	       jsondata = simplejson.dumps({"colors":self.pixels, "title":self.metadata.title, "creator": self.metadata.creator})
-	       print "Sending to server: %s data: %s"%(streamurl, jsondata)
+	       #print "Sending to server: %s data: %s"%(streamurl, jsondata)
                urllib2.urlopen(streamurl, "data="+jsondata)
            time.sleep(1.0/12.0)
  
@@ -311,7 +311,7 @@ class ColorsOut:
 
     def write(self, pixels):
         #pixels = self.crazyMofoingReorderingOfLights(pixels)
-        chroma = ChromaMessage(pixels, self.title, self.streamclass, self.framenumber)
+        chroma = ChromaMessage(pixels, self.title, self.streamclass, self.framenumber, self.creator, self.description)
         message = chroma.toOSC("/setcolors")
         self.client.send( message )
         self.framenumber += 1
