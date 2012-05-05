@@ -287,14 +287,18 @@ class ColorsOut:
         self.client.connect( ("localhost",11661) )
         self.title = title 
 	if not title:
-	     self.title = "Poop"
-	     print "argv[0] "+sys.argv[0]
-	     print "getcwd "+os.getcwd()
-	     path = os.getcwd()
-	     manifest = open(path+"/manifest.json")
-	     data = simplejson.load(manifest)
-	     self.title = data["name"]
-	     manifest.close()
+	     self.title = "Something went wrong"
+	     try:
+	      print "argv[0] "+sys.argv[0]
+	      print "getcwd "+os.getcwd()
+	      path = os.getcwd()+sys.argv[0]
+	      path = path.replace("main.py","")
+	      manifest = open(path+"manifest.json")
+	      data = simplejson.load(manifest)
+	      self.title = data["name"]
+	      manifest.close()
+	     except:
+	      print "Hey we died"
 
         self.framenumber = 0
         self.streamclass = streamclass
