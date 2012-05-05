@@ -8,9 +8,6 @@ if [ ! -d "./env/lib/python2.7/site-packages/cherrypy" ]; then
 fi
 TABCOMPLETION='_anims(){ _arguments "1: :(`ls animations`)" }; compdef _anims run.py'
 VERBOSE=false
-if [ "$1" == "-v" ]; then
-    VERBOSE=true
-fi
 # Just make them install virtualenv if they don't have it already.
 if ! which virtualenv &> /dev/null; then
     echo "\033[1m\033[31m[error]\033[0m please install virtualenv first."
