@@ -4,3 +4,4 @@ env/*
 Scripts/*
 build/*
 .DS_Store
+logs/*
