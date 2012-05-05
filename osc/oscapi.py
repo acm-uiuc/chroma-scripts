@@ -281,7 +281,7 @@ class StreamPoster( threading.Thread):
 
 
 class ColorsOut:
-    def __init__(self, title=None, streamclass="something"):
+    def __init__(self, title="Demo", streamclass="something"):
         self.client = OSCClient()
         self.client.connect( ("localhost",11661) )
         self.title = title 
