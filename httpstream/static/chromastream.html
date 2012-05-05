@@ -86,7 +86,7 @@ function getWeight(r,g,b) {
   var value = v * s;
   value = value * value;
 
-  return value + 0.0001; //scale down - if transparent - don't weight
+  return value + 0.0001+0.001*v; //scale down - if transparent - don't weight
 }
 
 function rgbToHsv(r, g, b){
@@ -117,7 +117,7 @@ function rgbToHsv(r, g, b){
   .lights {
     position: absolute;
     width: 16.866667%;
-    height: 25%;
+    height: 25.1%;
   }
   #container {
     margin-left: auto;
