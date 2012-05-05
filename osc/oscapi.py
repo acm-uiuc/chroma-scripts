@@ -303,7 +303,7 @@ class ColorsOut:
 	  self.creator = data["creator"]
 	  self.description = data["description"]
 	  manifest.close()
-	 except:
+	except:
 	  print "Hey we died"
 
         self.framenumber = 0
