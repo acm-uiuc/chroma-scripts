@@ -1,9 +1,13 @@
+
 var express = require('express')
   , app = express.createServer()
   , io = require('socket.io').listen(app);
 
 app.listen(8009);
 app.use(express.bodyParser());
+app.get('/', function (req, res) {
+  res.sendfile(__dirname + '/index.html');
+});
 
 app.post('/sendstream', function(req, res) {
   //console.log("Got a stream thingie req:"+req.body+" res:"+res);
