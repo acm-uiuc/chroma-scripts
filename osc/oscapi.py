@@ -287,6 +287,7 @@ class ColorsOut:
         self.title = title 
 	if not self.title:
 	    manifest = os.path.realpath(__file__).replace("main.py","manifest.json")
+	    print "Manifest: "+manifest
 	    json_data = open(manifest)
 	    data = simplejson.load(json_data)
 	    self.title = data["name"]
