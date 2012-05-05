@@ -278,13 +278,24 @@ class StreamPoster( threading.Thread):
  
 
 
-
+import os
+import sys
 
 class ColorsOut:
-    def __init__(self, title="Demo", streamclass="something"):
+    def __init__(self, title=None, streamclass="something"):
         self.client = OSCClient()
         self.client.connect( ("localhost",11661) )
         self.title = title 
+	if not title:
+	     self.title = "Poop"
+	     print "argv[0] "+sys.argv[0]
+	     print "getcwd "+os.getcwd()
+	     path = os.getcwd()
+	     manifest = open(path+"/manifest.json")
+	     data = simplejson.load(manifest)
+	     self.title = data["name"]
+	     manifest.close()
+
         self.framenumber = 0
         self.streamclass = streamclass
 
