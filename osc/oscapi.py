@@ -291,7 +291,7 @@ class ColorsOut:
 	     try:
 	      print "argv[0] "+sys.argv[0]
 	      print "getcwd "+os.getcwd()
-	      path = os.getcwd()+sys.argv[0]
+	      path = os.getcwd()+"/"+sys.argv[0]
 	      path = path.replace("main.py","")
 	      manifest = open(path+"manifest.json")
 	      data = simplejson.load(manifest)
