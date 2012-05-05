@@ -285,7 +285,7 @@ class ColorsOut:
         self.client = OSCClient()
         self.client.connect( ("localhost",11661) )
         self.title = title 
-	if not self.title:
+	if not self.title and not True:
 	    manifest = os.path.realpath(__file__).replace("main.py","manifest.json")
 	    print "Manifest: "+manifest
 	    json_data = open(manifest)
