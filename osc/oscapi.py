@@ -285,14 +285,6 @@ class ColorsOut:
         self.client = OSCClient()
         self.client.connect( ("localhost",11661) )
         self.title = title 
-	if not self.title and not True:
-	    manifest = os.path.realpath(__file__).replace("main.py","manifest.json")
-	    print "Manifest: "+manifest
-	    json_data = open(manifest)
-	    data = simplejson.load(json_data)
-	    self.title = data["name"]
-	    print "Name: %s"%self.title
-	    json_data.close()
         self.framenumber = 0
         self.streamclass = streamclass
 
