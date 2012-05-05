@@ -4,6 +4,7 @@ var express = require('express')
   , io = require('socket.io').listen(app);
 
 app.listen(8009);
+io.set('log level', 1);
 app.use(express.bodyParser());
 app.get('/', function (req, res) {
   res.sendfile(__dirname + '/index.html');
