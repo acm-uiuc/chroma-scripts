@@ -41,7 +41,7 @@ void draw() {
   float boxwidth = 100; //hard coded!
   float bordertop = 25;
   for (int i=0; i<24; i++) {
-    int a = actualorder[i];
+    int a = i;//actualorder[i];
     int column = i%4;
     int row = i/4;
     fill(colors[a]);
