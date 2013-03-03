@@ -61,8 +61,8 @@ def exit(addr, tags, data, source):
 		print "data = " + str(data) # [orbID, entryX, entryY, (R, G, B)]]
 		print "sour = " + str(source) # (network info)
 	idx = data[0] % NUMBER_OF_LIGHTS
-	orbs[idx] = data
-	canvas[idx] = data[3]
+	if (orbs[idx][0] == data[0]): # if the exiting orb is in orbs
+		orbs[idx] = [] # remove the data from the list
 	
 def resetCanvas():
 	r = random() * 100
@@ -73,7 +73,7 @@ def resetCanvas():
 		
 def plasmaCanvas():
 	for i in NUMBER_OF_LIGHTS:
-		canvas[i] = canvas[i] * random * 2
+		canvas[i] = canvas[i] * (random() * 2 + 0.1)
 
 if __name__ == "__main__":
 	run()
