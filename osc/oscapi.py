@@ -14,6 +14,7 @@ def handle_timeout(self):
 CLEAR_TIME = 5 #5 seconds before it clears stuff
 STAGING = False #don't do the actual writing. also print shit out.
 DEBUG = False 
+MAX_LIGHTS = 48
 
 def clampv(low,x,high):
     return max(low, min(x, high))
@@ -126,7 +127,7 @@ class ColorsIn:
                 self.updateStream()
             else:
                 if not STAGING: 
-                    octoapi.write([(0,0,0)]*24)
+                    octoapi.write([(0,0,0)]*MAX_LIGHTS)
                 if DEBUG:
                     print "CLEARED! %f"%time.time()
             self.lastclear = time.time()
@@ -181,7 +182,7 @@ class ColorsIn:
         self.server.timeout = 0
         self.lastwrite = time.time()        
         self.server.handle_timeout = types.MethodType(handle_timeout, self.server)
-        self.server.lastpixels = [(0,0,0)]*24
+        self.server.lastpixels = [(0,0,0)]*MAX_LIGHTS
 
         self.layers = {}
         self.activepid = 0
