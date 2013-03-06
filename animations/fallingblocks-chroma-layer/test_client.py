@@ -12,11 +12,15 @@ def test():
 	WAIT = 0.25
 	import time
 	initOSCClient(ip, port)
-	for i in range(0,50):
-		sendOSCMsg("/entry", [i,0,0] + [(1024,200,900)])
-		time.sleep(WAIT)
-	for i in range(0,50):
-		sendOSCMsg("/exit", [i,0,0] + [(0,0,0)])
-		time.sleep(WAIT)
+	
+	#for i in range(0,50):
+	#	sendOSCMsg("/entry", [i,0,0] + [(1024,200,900)])
+	#	time.sleep(WAIT)
+	#for i in range(0,50):
+	#	sendOSCMsg("/exit", [i,0,0] + [(0,0,0)])
+	#	time.sleep(WAIT)
 
+	sendOSCMsg("/entry", [1,0,0] + [1024,200,100])
+	time.sleep(WAIT)
+	sendOSCMsg("/move", [1,23,255] + [700,100,200])
 test()
