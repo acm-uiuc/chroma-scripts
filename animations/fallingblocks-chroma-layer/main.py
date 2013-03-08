@@ -14,8 +14,9 @@ import colorsys
 #################
 DEBUG = 1 # 0/1, gives more program feedback
 ip = "127.0.0.1" # receiving osc from 
-port = 9199
-MAX_COLOR = 1024 # max intensity of any color value
+port = 9123
+MAX_BRIGHTNESS = [1024.0] # max intensity of any color value
+MIN_BRIGHTNESS = [102.4]  # min intensity of any color value
 NUMBER_OF_LIGHTS = 48
 default_color = [(102.4, 102.4, 102.4)] # dim white light
 canvas = default_color * NUMBER_OF_LIGHTS # this gets sent to chroma
@@ -37,7 +38,9 @@ def run():
 	# OSC SERVER/HANDLERS #
 	initOSCServer(ip, port) # setup OSC server
 	setOSCHandler('/reset', reset)	# resets the visualization
-	setOSCHandler('/orb', orb)	# when an orb moves on the screen
+	setOSCHandler('/asteroid', orb)	# when an orb moves on the screen
+	setOSCHandler('/set_max_brightness', setMax)
+	setOSCHandler('/set_min_brightness', setMin)
 
 	# SERVER START #
 	startOSCServer()
@@ -49,7 +52,7 @@ def run():
 		while(1):
 			out.write(canvas) # write to canvas
 			time.sleep(0.1) # tick every 0.1 seconds
-			if ((clock%100) == 0): # every 1000 ticks
+			if ((clock%1000) == 0): # every 1000 ticks
 				plasmaCanvas()
 			clock = (clock+1)%10000 # increment clock, reseting every 10000 ticks
 	except KeyboardInterrupt:
@@ -71,12 +74,40 @@ def orb(addr, tags, data, source):
 	index		= data[0] % NUMBER_OF_LIGHTS
 	orbs[index]	= [data[0],data[6],data[5],map_IDs[index]] # [orbID, distance, hue, canvasID]
 	raw_color	= colorsys.hsv_to_rgb(data[5] / 360.0, 1, 1) #(h, s, v)
-	color		= oscapi.mult(raw_color, (MAX_COLOR / 2.0) + (MAX_COLOR / 2.0 * data[6])) # go from [0, 1) to [0, MAX_COLOR)
+	mul			= 0
+	if (data[5] > 220 and data[5] < 260): # color is blue
+		mul		= (MIN_BRIGHTNESS[0])
+	else: # color is not blue
+		mul		= (MIN_BRIGHTNESS[0]) + ((MAX_BRIGHTNESS[0] - MIN_BRIGHTNESS[0]) * data[6]) # go from [0, 1) to [0, MAX_BRIGHTNESS)
+	color = oscapi.mult(raw_color, mul)
 	canvas[map_IDs[index]] = color
 		
 def reset(addr, tags, data, source):
 	resetCanvas()
-
+	
+def setMax(addr, tags, data, source):
+	if (DEBUG):
+		print "orb handler called"
+		print "addr = " + str(addr) # /move
+		# print "tags = " + str(tags) # is
+		print "data = " + str(data) # [MAX_BRIGHTNESS[0]]
+		# print "sour = " + str(source) # (network info)
+		# print "orbs = " + str(orbs)
+	# OLD_MAX_BRIGHTNESS = MAX_BRIGHTNESS[0]
+	MAX_BRIGHTNESS[0] = data[0]
+	#for i in range(0, NUMBER_OF_LIGHTS):
+		# if (DEBUG): print "NEW/OLD = " + str(MAX_BRIGHTNESS[0] / OLD_MAX_BRIGHTNESS)
+	#	canvas[i] = oscapi.mult(canvas[i], MAX_BRIGHTNESS[0] / OLD_MAX_BRIGHTNESS)
+	
+def setMin(addr, tags, data, source):
+	if (DEBUG):
+		print "orb handler called"
+		print "addr = " + str(addr) # /move
+		# print "tags = " + str(tags) # is
+		print "data = " + str(data) # [MAX_BRIGHTNESS[0]]
+		# print "sour = " + str(source) # (network info)
+		# print "orbs = " + str(orbs)
+	MIN_BRIGHTNESS[0] = data[0]
 
 #############################
 #	CANVAS MANIPULATION		#
@@ -84,16 +115,12 @@ def reset(addr, tags, data, source):
 def resetCanvas():
 	for i in range(0, NUMBER_OF_LIGHTS):
 		orbs[i] = default_orb
-	r = random() * MAX_COLOR / 3 + MAX_COLOR / 10.0
-	g = random() * MAX_COLOR / 3 + MAX_COLOR / 10.0
-	b = random() * MAX_COLOR / 3 + MAX_COLOR / 10.0
-	default_color[0] = (r,g,b)
 	for i in range(0, NUMBER_OF_LIGHTS):
-		canvas[i] = (r,g,b)
+		canvas[i] = default_color[0]
 		map_IDs[i] = i
-	shuffle(map_IDs)
-	if (DEBUG): print "shuffle: " + str(map_IDs)
 	plasmaCanvas()
+	MAX_BRIGHTNESS[0] = 1024.0
+	MIN_BRIGHTNESS[0] = 102.4
 		
 def plasmaCanvas():
 	for i in range(0, NUMBER_OF_LIGHTS):
