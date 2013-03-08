@@ -1,115 +1,137 @@
+#################
+#	IMPORTS		#
+#################
 import sys
 from animations import FadeAnimation
 from simpleOSC import initOSCServer, startOSCServer, closeOSC, setOSCHandler
 import OSC
 import oscapi
-from random import random, randint
+from random import random, randint, shuffle
+import colorsys
 
-DEBUG = 1
-
+#################
+#	VARIABLES	#
+#################
+DEBUG = 1 # 0/1, gives more program feedback
 ip = "127.0.0.1" # receiving osc from 
-port = 9199
-MAX_COLOR = 1024
-NUMBER_OF_LIGHTS = 24 # currently 24, EOH 48
+port = 9123
+MAX_BRIGHTNESS = [1024.0] # max intensity of any color value
+MIN_BRIGHTNESS = [102.4]  # min intensity of any color value
+NUMBER_OF_LIGHTS = 48
 default_color = [(102.4, 102.4, 102.4)] # dim white light
-canvas = default_color * NUMBER_OF_LIGHTS
-default_orb = [-1,-1,-1,-1,-1,-1,-1]
-orbs = [default_orb] * NUMBER_OF_LIGHTS # [orbID, entryX, entryY, R, G, B, canvasidx]
-out = FadeAnimation()
+canvas = default_color * NUMBER_OF_LIGHTS # this gets sent to chroma
+default_orb = [-1,-1,-1, -1] # [orbID, distance, hue, canvasID]
+orbs = [default_orb] * NUMBER_OF_LIGHTS # this stores orb data
+map_IDs = [-1] * NUMBER_OF_LIGHTS # maps from orbID to canvasID
+out = FadeAnimation() 
 
+#################
+#	MAIN		#
+#################
 def run():
 	# SETUP #
 	resetCanvas()
 	import time
-	out.FADERATE = 8 #fade rate, currently broken?
+	out.FADERATE = 8 # fade rate, currently broken?
 	out.start()
-	initOSCServer(ip, port) # start OSC server
 	
-	# OSC HANDLERS #
-	setOSCHandler('/entry', entry)
-	setOSCHandler('/exit', exit)
-	setOSCHandler('/reset', reset)
+	# OSC SERVER/HANDLERS #
+	initOSCServer(ip, port) # setup OSC server
+	setOSCHandler('/reset', reset)	# resets the visualization
+	setOSCHandler('/asteroid', orb)	# when an orb moves on the screen
+	setOSCHandler('/set_max_brightness', setMax)
+	setOSCHandler('/set_min_brightness', setMin)
 
 	# SERVER START #
 	startOSCServer()
 	print "server is running, listening at " + str(ip) + ":" + str(port)
 
+	# SERVER LOOP#
 	try:
 		clock = 1
 		while(1):
-			out.write(canvas) #write to canvas
-			time.sleep(0.1)
-			if ((clock%1000) == 0):
+			out.write(canvas) # write to canvas
+			time.sleep(0.1) # tick every 0.1 seconds
+			if ((clock%1000) == 0): # every 1000 ticks
 				plasmaCanvas()
-			clock = (clock+1)%10000 # reset clock every 10000 ticks
+			clock = (clock+1)%10000 # increment clock, reseting every 10000 ticks
 	except KeyboardInterrupt:
 		print "closing all OSC connections... and exit"
-		closeOSC() # finally close the connection before exiting or program.	
-	
-def entry(addr, tags, data, source):
+		closeOSC() # close the osc connection before exiting	
+
+
+#####################
+#	OSC HANDLERS	#
+#####################
+def orb(addr, tags, data, source):
 	if (DEBUG):
-		print "entry handler called"
-		print "addr = " + str(addr) # /entry
+		print "orb handler called"
+		print "addr = " + str(addr) # /move
 		# print "tags = " + str(tags) # is
-		print "data = " + str(data) # [orbID, entryX, entryY, R, G, B]
+		print "data = " + str(data) # [orbID, x, y, curvature, force, hue, distance, age]
 		# print "sour = " + str(source) # (network info)
-	idx = data[0] + randint(0,NUMBER_OF_LIGHTS)
-	idx = idx % NUMBER_OF_LIGHTS
-	orbs[idx] = data + [idx] # store orb data
-	pix = (data[3],data[4],data[5])
-	canvas[idx] = pix # change pixel color to orb color
-	
-def exit(addr, tags, data, source):
-	if (DEBUG):
-		print "exit handler called"
-		print "addr = " + str(addr) # /exit
-		# print "tags = " + str(tags) # is
-		print "data = " + str(data) # [orbID, exitX, exitY, R, G, B]]
-		# print "sour = " + str(source) # (network info)
-		print "orbs = " + str(orbs)
-	for i in range(0, NUMBER_OF_LIGHTS): # for all orb data
-		if (orbs[i][0] == data[0]): # if the orb is currently in the array
-			if (DEBUG):
-				print "found orb for removal: " + str(orbs[i])
-			canvas[orbs[i][6]] = default_color[0]	# reset the color of its light
-			orbs[i] = [-1,-1,-1,-1,-1,-1,-1] # reset the orb
-			
+		# print "orbs = " + str(orbs)
+	index		= data[0] % NUMBER_OF_LIGHTS
+	orbs[index]	= [data[0],data[6],data[5],map_IDs[index]] # [orbID, distance, hue, canvasID]
+	raw_color	= colorsys.hsv_to_rgb(data[5] / 360.0, 1, 1) #(h, s, v)
+	mul			= 0
+	if (data[5] > 220 and data[5] < 260): # color is blue
+		mul		= (MIN_BRIGHTNESS[0])
+	else: # color is not blue
+		mul		= (MIN_BRIGHTNESS[0]) + ((MAX_BRIGHTNESS[0] - MIN_BRIGHTNESS[0]) * data[6]) # go from [0, 1) to [0, MAX_BRIGHTNESS)
+	color = oscapi.mult(raw_color, mul)
+	canvas[map_IDs[index]] = color
+		
 def reset(addr, tags, data, source):
 	resetCanvas()
 	
+def setMax(addr, tags, data, source):
+	if (DEBUG):
+		print "orb handler called"
+		print "addr = " + str(addr) # /move
+		# print "tags = " + str(tags) # is
+		print "data = " + str(data) # [MAX_BRIGHTNESS[0]]
+		# print "sour = " + str(source) # (network info)
+		# print "orbs = " + str(orbs)
+	# OLD_MAX_BRIGHTNESS = MAX_BRIGHTNESS[0]
+	MAX_BRIGHTNESS[0] = data[0]
+	#for i in range(0, NUMBER_OF_LIGHTS):
+		# if (DEBUG): print "NEW/OLD = " + str(MAX_BRIGHTNESS[0] / OLD_MAX_BRIGHTNESS)
+	#	canvas[i] = oscapi.mult(canvas[i], MAX_BRIGHTNESS[0] / OLD_MAX_BRIGHTNESS)
+	
+def setMin(addr, tags, data, source):
+	if (DEBUG):
+		print "orb handler called"
+		print "addr = " + str(addr) # /move
+		# print "tags = " + str(tags) # is
+		print "data = " + str(data) # [MAX_BRIGHTNESS[0]]
+		# print "sour = " + str(source) # (network info)
+		# print "orbs = " + str(orbs)
+	MIN_BRIGHTNESS[0] = data[0]
+
+#############################
+#	CANVAS MANIPULATION		#
+#############################
 def resetCanvas():
 	for i in range(0, NUMBER_OF_LIGHTS):
 		orbs[i] = default_orb
-	r = random() * MAX_COLOR / 3 + MAX_COLOR / 10.0
-	g = random() * MAX_COLOR / 3 + MAX_COLOR / 10.0
-	b = random() * MAX_COLOR / 3 + MAX_COLOR / 10.0
-	default_color[0] = (r,g,b)
 	for i in range(0, NUMBER_OF_LIGHTS):
-		canvas[i] = (r,g,b)
+		canvas[i] = default_color[0]
+		map_IDs[i] = i
 	plasmaCanvas()
+	MAX_BRIGHTNESS[0] = 1024.0
+	MIN_BRIGHTNESS[0] = 102.4
 		
 def plasmaCanvas():
 	for i in range(0, NUMBER_OF_LIGHTS):
 		r = ((random()*0.1) + 0.95)
 		#if (DEBUG): print r
 		canvas[i] = oscapi.mult(canvas[i], r)
-	default_color[0] = oscapi.mult(default_color[0], ((random()*0.5) + 0.75))
+	shuffle(map_IDs)
+	
 
+#################
+#	???			#
+#################
 if __name__ == "__main__":
 	run()
-
-	# import time
-    # out = FadeAnimation()
-    # out.FADERATE = 8.0
-    # out.start()
-
-    # while True:
-        # for i in range(24):
-            # pix = [(0.0,0.0,0.0)]*24
-            # if i%8 == 0:
-                # pix[i] = (1023.0,0.0,0.0)
-            # else:
-                # pix[i] = (0.0,1023.0,1023.0)
-            # out.write(pix)
-            # time.sleep(0.7)
-            # time.sleep(0.2)
