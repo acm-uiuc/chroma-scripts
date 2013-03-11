@@ -34,6 +34,42 @@ def mult(c1, val):
     return (c1[0]*val, c1[1]*val, c1[2]*val)
 
 class ColorsIn:
+    def set_colors(self,path, tags, args, source):
+        try:
+            chroma = ChromaMessage.fromOSC(tags,args)
+
+            octoapi.write(chroma.data)
+            #in any case, we slowly fade out every stream remaining
+            #this also writes to the device
+            #mark the last time we got a packet
+        except:
+            import traceback
+            traceback.print_exc()
+
+    def each_frame(self):
+        self.server.timed_out = False
+        while not self.server.timed_out:
+            #self.handleClearing()
+            self.server.handle_request()
+
+    def whatever(self, path, tags, args, source):
+	pass
+
+    def start(self):
+        #server = OSCServer( ("128.174.251.39", 11661) )
+        self.server = OSCServer( ("localhost", 11661) )
+        self.server.timeout = 0
+        self.server.handle_timeout = types.MethodType(handle_timeout, self.server)
+
+        self.server.addMsgHandler( "/setcolors", self.set_colors)
+        self.server.addMsgHandler( "/poop", self.whatever)
+        while True:
+            self.each_frame()
+
+        self.server.close()
+
+
+class ColorsInSucks:
     #measured in seconds to fade in 100%
     fadeoutrate = 4.0
     fadeinrate = 4.0
@@ -76,7 +112,7 @@ class ColorsIn:
             self.layers = dict( (k, v) for k,v in self.layers.iteritems() if self.shouldWeKeepLayer(v) )
         #apply our opacity rules
         pixels = self.applyOpacity(self.layers.values())
-        if not STAGING:
+        if not STAGING and self.activepid:
             self.streamer.pixels = pixels
 	    self.streamer.metadata = self.layers[self.activepid].chroma
             #pixels = self.crazyMofoingReorderingOfLights(pixels)
@@ -317,6 +353,7 @@ class ColorsOut:
         #pixels = self.crazyMofoingReorderingOfLights(pixels)
         chroma = ChromaMessage(pixels, self.title, self.streamclass, self.framenumber, self.creator, self.description)
         message = chroma.toOSC("/setcolors")
+	#print "Sending message %s"%str(pixels)
         self.client.send( message )
         self.framenumber += 1
 
@@ -347,7 +384,7 @@ if __name__ == "__main__":
         import octoapi
     colors = ColorsIn()
     def signal_handler(signal, frame):
-        colors.streamer.keepRunning=False
+        #colors.streamer.keepRunning=False
         sys.exit(0)
     signal.signal(signal.SIGINT, signal_handler)
     colors.start()

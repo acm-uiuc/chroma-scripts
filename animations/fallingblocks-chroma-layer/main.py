@@ -3,6 +3,7 @@
 #################
 import sys
 from animations import FadeAnimation
+#from oscapi import ColorsOut as FadeAnimation 
 from simpleOSC import initOSCServer, startOSCServer, closeOSC, setOSCHandler
 import OSC
 import oscapi
@@ -12,9 +13,9 @@ import colorsys
 #################
 #	VARIABLES	#
 #################
-DEBUG = 1 # 0/1, gives more program feedback
+DEBUG = 0 # 0/1, gives more program feedback
 ip = "127.0.0.1" # receiving osc from 
-port = 9123
+port = 9125
 MAX_BRIGHTNESS = [1024.0] # max intensity of any color value
 MIN_BRIGHTNESS = [102.4]  # min intensity of any color value
 NUMBER_OF_LIGHTS = 48

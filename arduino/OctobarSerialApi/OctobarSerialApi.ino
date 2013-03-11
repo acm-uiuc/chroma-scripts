@@ -22,7 +22,7 @@ void setup() {
    digitalWrite(enablepin, LOW);
  
    Serial.begin(115200);
-   for (int i = 1; i < 8; i++)
+   for (int i = 1; i < NumLEDs; i++)
     {
       setLED(i, 1023, 1023, 1023);
     }
@@ -81,7 +81,7 @@ void setLED(byte LED, int red, int green, int blue)
 }
 
 void clearLEDs() {
-   for (int i = 1; i < 8; i++)
+   for (int i = 1; i < NumLEDs; i++)
   {
     setLED(i, 0, 0, 0);
   }
