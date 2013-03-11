@@ -15,6 +15,7 @@ def setup():
     ardunos = []
     with open(FILENAME) as f:
         for line in f.readlines():
+            line = line.strip()
             try:
                 arduinos.append(serial.Serial(line, 115200))
             except:
