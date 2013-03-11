@@ -4,15 +4,21 @@ import serial
 #ser = serial.Serial('/dev/ttyUSB0', 115200)
 
 arduinos=[]
-
+FILENAME = "devices.txt"
+LIGHTS_PER_ARDUINO = 16
+NUM_LIGHTS = 16*3
 
 def setup():
     for arduino in arduinos:
         arduino.close()
     ardunos = []
-    arduinos.append(serial.Serial('/dev/tty.usbmodem1d114441', 115200))
-    arduinos.append(serial.Serial('/dev/tty.usbserial-A9007OSa88', 115200))
-    arduinos.append(serial.Serial('/dev/tty.usbserial-A9007Q5M', 115200))
+    with open(FILENAME) as f:
+        for line in f.readlines():
+            try:
+                arduinos.append(serial.Serial(line, 115200))
+            except:
+                print "ERROR OPENING ARDUINO "+line
+    NUM_LIGHTS = LIGHTS_PER_ARDUINO * len(arduinos) 
 
 setup()
 
@@ -34,13 +40,24 @@ def write1(array, ser):
         ser.write(towrite)
         #print "writing: "+towrite
     except:
-        print "OOPS! error!"
+        print "OOPS! error! retrying"
         setup()
 
 def write(array):
-    write1(array[0:16], arduinos[0])
-    write1(array[16:32], arduinos[1])
-    write1(array[32:48], arduinos[2])
+    #bounds checking
+    if len(array) < NUM_LIGHTS:
+        diff = NUM_LIGHTS - len(array)
+        array = array + [(0,0,0)]*diff
+    if len(array) > NUM_LIGHTS:
+        array = array[0:NUM_LIGHTS]
+    for arduino,chunk in enumerate(chunks(array, LIGHTS_PER_ARDUINO)):
+        write1(chunk, arduinos[arduino])
+
+def chunks(l, n):
+    """ Yield successive n-sized chunks from l.
+    """
+    for i in xrange(0, len(l), n):
+        yield l[i:i+n]
 
 
 def clear():
