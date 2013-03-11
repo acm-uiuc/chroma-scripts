@@ -61,7 +61,8 @@ def chunks(l, n):
 
 
 def clear():
-    ser.write('C')
+    for arduino in arduinos:
+        arduino.write('C')
 
 
 if __name__ == "__main__":
