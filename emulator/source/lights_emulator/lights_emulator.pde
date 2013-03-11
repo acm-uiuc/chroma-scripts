@@ -8,7 +8,9 @@ import oscP5.*;
 import netP5.*;
 
 OscP5 oscP5;
-int numboxes = 24;
+boolean largemode = false;
+int numboxes = 48;
+int numlargeboxes = 48;
 color[] colors = new color[numboxes];
 PFont f;
 boolean displayText = true;
@@ -30,7 +32,7 @@ void setup() {
 }
 
 void usage() {
-  println("lights_emulator: \n\t t - toggle text\n\t d - debug text");
+  println("lights_emulator: \n\t t - toggle text\n\t d - debug text\n\t l - large mode (6x8)");
 }
 
 int[] actualorder = {
@@ -38,17 +40,28 @@ int[] actualorder = {
 };
 void draw() {
   background(0);
-  float boxwidth = 100; //hard coded!
   float bordertop = 25;
-  for (int i=0; i<24; i++) {
-    int a = actualorder[i];
-    int column = i%4;
-    int row = i/4;
+  int bwidth = 4;
+  int bheight = 6;
+  int length = 24;
+  float fontsize = 48;
+  if (largemode) {
+    bwidth = 6;
+    bheight = 8; 
+    length = 48;
+    fontsize = 32;
+  }
+  float boxwidth = width/bwidth; //hard coded!
+  
+  for (int i=0; i<length; i++) {
+    int a = i;//actualorder[i];
+    int column = i%bwidth;
+    int row = i/bwidth;
     fill(colors[a]);
     rect(column*boxwidth, bordertop+row*boxwidth, boxwidth, boxwidth);
     if (displayText) {
       fill(255, 140);
-      textFont(f, 48);
+      textFont(f, fontsize);
       textAlign(CENTER, CENTER);
       text(""+(i), column*boxwidth+boxwidth/2, bordertop+row*boxwidth+boxwidth/2);
     }
@@ -72,6 +85,9 @@ void keyPressed() {
   } 
   else if (key == 'd') {
     debugText = !debugText;
+  }
+  else if (key == 'l') {
+    largemode = !largemode;
   }
 }
 
