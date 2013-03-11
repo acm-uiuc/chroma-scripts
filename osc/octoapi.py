@@ -1,4 +1,5 @@
 import serial
+from __future__ import with_statement #dgrrrr
 
 #ser = serial.Serial('/dev/tty.usbserial-A9007Q5M', 115200)
 #ser = serial.Serial('/dev/ttyUSB0', 115200)
