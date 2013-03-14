@@ -19,7 +19,7 @@ def setup():
             line = line.strip()
             try:
                 arduinos.append(serial.Serial(line, 115200))
-            except Exception as e:
+            except Exception, e:
                 print "ERROR OPENING ARDUINO "+line
                 print e
     NUM_LIGHTS = LIGHTS_PER_ARDUINO * len(arduinos) 
