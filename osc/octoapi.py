@@ -48,12 +48,12 @@ def write1(array, ser):
 
 def write(array):
     #bounds checking
+    array = config.maplights(array)
     if len(array) < NUM_LIGHTS:
         diff = NUM_LIGHTS - len(array)
         array = array + [(0,0,0)]*diff
     if len(array) > NUM_LIGHTS:
         array = array[0:NUM_LIGHTS]
-    array = config.maplights(array)
     for arduino,chunk in enumerate(chunks(array, LIGHTS_PER_ARDUINO)):
         write1(chunk, arduinos[arduino])
 
