@@ -1,5 +1,6 @@
 from __future__ import with_statement #dgrrrr
 import serial
+import config
 
 #ser = serial.Serial('/dev/tty.usbserial-A9007Q5M', 115200)
 #ser = serial.Serial('/dev/ttyUSB0', 115200)
@@ -52,6 +53,7 @@ def write(array):
         array = array + [(0,0,0)]*diff
     if len(array) > NUM_LIGHTS:
         array = array[0:NUM_LIGHTS]
+    array = config.maplights(array)
     for arduino,chunk in enumerate(chunks(array, LIGHTS_PER_ARDUINO)):
         write1(chunk, arduinos[arduino])
 
