@@ -63,7 +63,7 @@ Each light recieves an input that is a tuple (r,g,b) where each of r, g, b can b
 Construct an array of tuples and send them to the OSC server with 
 
 ```python
-pix = [(1023.0,0.0,0.0)]*24
+pix = [(1023.0,0.0,0.0)]*48
 out = ColorsOut()
 out.write(pix)
 ```
@@ -72,7 +72,7 @@ To add simple effects, such as automatic fade-in and fade-out of pixels, use the
 
 ```python
 from animations import FadeAnimation
-pix = [(1023.0,0.0,0.0)]*24
+pix = [(1023.0,0.0,0.0)]*48
 out = FadeAnimation()
 out.FADEINRATE = 2.0 #optional
 out.FADEOUTRATE = 8.0 #optional, makes things 'trail off'
