@@ -1,5 +1,6 @@
 import sys
 from oscapi import ColorsOut 
+import config
 
 
 selected = 0
@@ -66,4 +67,4 @@ if __name__ == "__main__":
             selected = (selected - 1)%48
         if s == 'r':
             selected = (selected + 1)%48
-        print 'selected light: '+str(selected)
+        print 'selected light: '+str(selected)+' and the octobar index it maps to: '+str(config.order[selected])
