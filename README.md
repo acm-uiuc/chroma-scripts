@@ -1,7 +1,9 @@
 Chroma-Lights
 =============
 
-Chroma lights is a frame work for running annimations for led lights over OSC.
+Chroma is a set of 48 lights located in the main office of the ACM at UIUC (see more on it's main site: http://www.acm.uiuc.edu/sigmusic/chroma/)
+
+This repo contains the environment to code for them, as well as the collection of everyone's animations. It contains a full testing environment, and handy animation utilities. Fork this repo and submit a pull request to add your changes back to the main repository.
 
 Setup
 -----
