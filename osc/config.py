@@ -55,6 +55,17 @@ order = [
 
 
 
+order = [
+  43,  36,  41,  45,  44,  47,
+  38,  39,  42,  46,  37,  40,
+  34,  35,  33,  32,  24,   0,
+  20,  23,  21,  21,  18,  27,
+  29,  17,  28,  27,  19,  30,
+   6,  22,  16,  15,  10,  31,
+   2,   4,   3,  12,  11,  13,
+   7,   1,   5,   8,   9,  14,
+]
+
 def maplights(array):
 	"""
 	Given a list of n tuples in the form of (R,G,B), return a list of the same size,
