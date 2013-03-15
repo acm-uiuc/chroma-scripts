@@ -52,6 +52,9 @@ class ColorsIn:
             #self.handleClearing()
             self.server.handle_request()
 
+    def reload_config(self, path, tags, args, source):
+	octoapi.reload_config()
+
     def whatever(self, path, tags, args, source):
 	pass
 
@@ -63,6 +66,7 @@ class ColorsIn:
 
         self.server.addMsgHandler( "/setcolors", self.set_colors)
         self.server.addMsgHandler( "/poop", self.whatever)
+        self.server.addMsgHandler( "/reloadconfig", self.reload_config)
         while True:
             self.each_frame()
 
