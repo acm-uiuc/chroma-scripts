@@ -1,7 +1,9 @@
 Chroma-Lights
 =============
 
-Chroma lights is a frame work for running annimations for led lights over OSC.
+Chroma is a set of 48 lights located in the main office of the ACM at UIUC (see more on it's main site: http://www.acm.uiuc.edu/sigmusic/chroma/)
+
+This repo contains the environment to code for them, as well as the collection of everyone's animations. It contains a full testing environment, and handy animation utilities. Fork this repo and submit a pull request to add your changes back to the main repository.
 
 Setup
 -----
@@ -63,7 +65,7 @@ Each light recieves an input that is a tuple (r,g,b) where each of r, g, b can b
 Construct an array of tuples and send them to the OSC server with 
 
 ```python
-pix = [(1023.0,0.0,0.0)]*24
+pix = [(1023.0,0.0,0.0)]*48
 out = ColorsOut()
 out.write(pix)
 ```
@@ -72,7 +74,7 @@ To add simple effects, such as automatic fade-in and fade-out of pixels, use the
 
 ```python
 from animations import FadeAnimation
-pix = [(1023.0,0.0,0.0)]*24
+pix = [(1023.0,0.0,0.0)]*48
 out = FadeAnimation()
 out.FADEINRATE = 2.0 #optional
 out.FADEOUTRATE = 8.0 #optional, makes things 'trail off'

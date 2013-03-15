@@ -8,7 +8,7 @@ import oscP5.*;
 import netP5.*;
 
 OscP5 oscP5;
-boolean largemode = false;
+boolean largemode = true;
 int numboxes = 48;
 int numlargeboxes = 48;
 color[] colors = new color[numboxes];
