@@ -7,10 +7,10 @@ if __name__ == "__main__":
     out = ColorsOut()
     bgColor=(0.0,0.0,0.0)
     fgColor=(1023.0,0.0,0.0)
-    pix = [bgColor]*24
+    pix = [bgColor]*48
     c = 0
     while True:
-        for x in range(0,24):
+        for x in range(0,48):
             if( x == c ):
                 pix[x] = fgColor
             else:
