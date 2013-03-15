@@ -6,7 +6,7 @@ sys.path.append("./osc")
 from oscapi import ColorsOut
 from animations import FadeAnimation
 
-MAX_BULBS = 24
+MAX_BULBS = 48
 
 fps = 60.0
 

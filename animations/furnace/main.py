@@ -7,7 +7,7 @@ falloffRate = 7.0
 if __name__ == "__main__":
     import time
     out = ColorsOut()
-    pix = [(0.0,0.0,0.0)] * 24
+    pix = [(0.0,0.0,0.0)] * 48
     runInAnimation = True
     smoothnessRatio = 200
     sleepTime = .01
@@ -23,14 +23,14 @@ if __name__ == "__main__":
         #       pix[i] = (0.0,0.0,0.0)
         if runInAnimation:
             for i in xrange(12):
-                pix[random.randint(0,23)] = (pix[i][0] + 1023/smoothnessRatio, 0.0, 0.0)
+                pix[random.randint(0,47)] = (pix[i][0] + 1023/smoothnessRatio, 0.0, 0.0)
             out.write(pix)
             if pix[i][0] > 900:
                     runInAnimation = False
             time.sleep(sleepTime)
         else:
             for i in xrange(12):
-                pix[random.randint(0,23)] = (pix[i][0] - 1023/smoothnessRatio, 0.0, 0.0)
+                pix[random.randint(0,47)] = (pix[i][0] - 1023/smoothnessRatio, 0.0, 0.0)
             out.write(pix)
             if pix[i][0] < 100.0:
                 runInAnimation = True
