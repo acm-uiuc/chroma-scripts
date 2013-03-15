@@ -55,7 +55,7 @@ def maplights(array):
 	out = [(0,0,0)]*len(order)
 	for i in range(len(order)):
 	  try:
-	    out[i] = array[order[i]]
+	    out[order[i]] = array[i]
 	  except IndexError:
 	    pass
 	
