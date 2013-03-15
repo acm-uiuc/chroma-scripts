@@ -5,6 +5,10 @@ import config
 #ser = serial.Serial('/dev/tty.usbserial-A9007Q5M', 115200)
 #ser = serial.Serial('/dev/ttyUSB0', 115200)
 
+DEBUG = True
+def debug(string): 
+    if DEBUG: print string
+
 arduinos=[]
 FILENAME = "devices.txt"
 LIGHTS_PER_ARDUINO = 16
@@ -28,6 +32,9 @@ setup()
 
 
 
+def reload_config():
+    debug("Reloading config")
+    reload(config)
 
 """
     array is an array of 3 tuples (R, G, B)
