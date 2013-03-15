@@ -26,7 +26,7 @@ order = [
   45,       40,       47,
        36,       44,       38,
   41,       43,       39,
-       34,       -1,       -1,
+       34,       17,       35,
 
   32,       30,       25, 
        22,       27,       24,
@@ -55,7 +55,7 @@ def maplights(array):
 	out = [(0,0,0)]*len(order)
 	for i in range(len(order)):
 	  try:
-	    out[order[i]] = array[i]
+	    out[i] = array[order[i]]
 	  except IndexError:
 	    pass
 	
