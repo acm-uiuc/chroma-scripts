@@ -6,7 +6,7 @@ from oscapi import ColorsOut
 if __name__ == "__main__":
     import time
     out = ColorsOut()
-    pix = [(0.0,0.0,0.0)] * 24
+    pix = [(0.0,0.0,0.0)] * 48
     fadeConstant = 210.0
     sleepTime = 1.0
     newSnake = True
