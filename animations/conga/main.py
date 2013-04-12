@@ -15,16 +15,16 @@ def main():
     pix[curr] = (r, g, b)
     curr += 1
     out.write(pix)
-    time.sleep(1)
+    time.sleep(0.2)
 
     while True:
-        while (curr < 47):
+        while curr < 47:
             r, g, b = colorAdd(r, g, b)
             pix[curr] = (r, g, b)
             out.write(pix)
             time.sleep(0.2)
             curr += 1
-        while (curr > 0):
+        while curr > 0:
             r, g, b = colorAdd(r, g, b)
             pix[curr] = (r, g, b)
             out.write(pix)
@@ -50,6 +50,7 @@ def colorAdd(r, g, b):
     return (r, g, b)
 
 if __name__ == "__main__":
-    main()
+    while True:
+        main()
 
 
