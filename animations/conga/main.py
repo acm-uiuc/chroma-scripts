@@ -32,17 +32,17 @@ def main():
             curr -= 1
 
 def colorAdd(r, g, b):
-    newR = (float)(random.randrange(-50, 50, 10))
+    newR = (float)(random.randrange(-100, 100, 10))
     if newR + r < lower:
         r -= newR
     else:
         r += newR
-    newG = (float)(random.randrange(-50, 50, 5))
+    newG = (float)(random.randrange(-100, 100, 5))
     if newG + g < lower:
         g -= newG
     else:
         g += newG
-    newB = (float)(random.randrange(-50, 50, 10))
+    newB = (float)(random.randrange(-100, 100, 10))
     if newB + b < lower:
         b -= newB
     else:
