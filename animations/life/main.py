@@ -50,7 +50,7 @@ if __name__ == "__main__":
         pix = []
         alive = 0
         for i in xrange(6):
-            for j in xrange(4):
+            for j in xrange(8):
                 if board[(i,j)] > 0:
                     pix.append((1023.0,0.0,0.0))
                     alive += 1
