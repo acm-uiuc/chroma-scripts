@@ -1,0 +1,203 @@
+<html lang="en">
+<head>
+<script src="http://lab2.acm.uiuc.edu:8009/socket.io/socket.io.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script>
+var fixedcolor = [0,0,0];
+  var socket = io.connect('http://lab2.acm.uiuc.edu:8009');
+  socket.on('stream', function (data) {
+    var colordata = $.parseJSON(data.data);
+    $.each(colordata.colors, function(index,color) {
+      $("#light-"+index).css("background-color","rgb("+Math.round(color[0]/4)+","+Math.round(color[1]/4)+","+Math.round(color[2]/4)+")");
+    });
+    newcolor = findMostProminentColor(colordata.colors);
+    fixedcolor = smooth(fixedcolor,newcolor);
+    var color = fixedcolor;
+    $("#title h1").css("text-shadow","rgba("+Math.round(color[0]/4)+","+Math.round(color[1]/4)+","+Math.round(color[2]/4)+", 0.7) 0 0 0.5em");
+    $("#streamname").html(colordata.title);
+    $("#creator").html(colordata.creator);
+  });
+  $(function() {
+    for (var i=0; i<24; i++) {
+      var y = Math.floor(i%4) / 4.0 * 100;
+      var x = Math.floor(i/4) / 6.0 * 100;
+      $("#lightscontainer").append("<div id='light-"+i+"' class='lights' style='left:"+x+"%; top:"+y+"%'></div>");
+    }
+  });
+
+function smooth(o,n) {
+  var i = 0.85;
+  var ip = 1-i;
+  return [o[0]*i+n[0]*ip, o[1]*i+n[1]*ip, o[2]*i+n[2]*ip];
+}
+
+function findMostProminentColor(colors) {
+    acolors = {};
+    for (var i=0; i<colors.length; i++) {
+      var r = colors[i][0];
+      var g = colors[i][1];
+      var b = colors[i][2];
+      var weight = getWeight(r,g,b);
+      var hsv = rgbToHsv(r,g,b);
+      var key = hsv[0]/3;
+      if (acolors[key]) {
+         acolors[key].count = acolors[key].count + weight;
+         acolors[key].data.push([r,g,b, weight])
+         //colors[key].data.push({string:str, array:[r,g,b,a]});
+      } else {
+         acolors[key] =  {
+          count:weight,
+          data:[[r,g,b, weight]]
+         };
+      }
+    }
+    return getMaxColor(acolors);
+}
+
+function getMaxColor(colors) {
+  var max = 0;
+  var argmax;
+  for (key in colors) {
+    var element = colors[key];
+    //console.log("Color: "+key+" times: "+element);
+    if (element.count > max) {
+      max = element.count;
+      argmax = element.data;
+    }
+  }
+
+  //found the most common color, now let's find the brightest component in it.
+  max = 0;
+  var brightest;
+  for (var i=0; i<argmax.length; i++) {
+    if (argmax[i][3] > max) {
+      max = argmax[i][3];
+      brightest = [argmax[i][0],argmax[i][1], argmax[i][2]];
+    }
+  }
+  return brightest;
+}
+
+
+function getWeight(r,g,b) {
+  var hsv = rgbToHsv(r,g,b);
+  var h = hsv[0]; var s = hsv[1]; var v = hsv[2];
+
+  var value = v * s;
+  value = value * value;
+
+  return value + 0.0001+0.001*v; //scale down - if transparent - don't weight
+}
+
+function rgbToHsv(r, g, b){
+    r = r/255, g = g/255, b = b/255;
+    var max = Math.max(r, g, b), min = Math.min(r, g, b);
+    var h, s, v = max;
+
+    var d = max - min;
+    s = max == 0 ? 0 : d / max;
+
+    if(max == min){
+        h = 0; // achromatic
+    }else{
+        switch(max){
+            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+            case g: h = (b - r) / d + 2; break;
+            case b: h = (r - g) / d + 4; break;
+        }
+        h /= 6;
+    }
+
+    return [h, s, v];
+}
+
+</script>
+<link href='http://fonts.googleapis.com/css?family=Russo+One' rel='stylesheet' type='text/css'>
+<style type="text/css">
+  .lights {
+    position: absolute;
+    width: 16.866667%;
+    height: 25.1%;
+  }
+  #container {
+    margin-left: auto;
+    margin-right: auto;
+    width:600px;
+    background-color:#000;
+    margin-top: 50px;
+    margin-bottom: 50px;
+  }
+  #lightscontainer {
+    position: relative;
+    width: 100%;
+    height: 400px;
+  }
+  body {
+    background-color:#000;
+    color: #999;
+    font-family: 'Russo One', sans-serif;
+    letter-spacing: 1px;
+    font-weight: 300;
+  }
+  h1 {
+    letter-spacing: 3px;
+    font-size: 76px;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    overflow: hide;
+    font-weight: 300;
+    margin:0;
+    padding:0;
+    margin-bottom:10px;
+    text-shadow: rgba(255,255,255,0) 0 0 0.5em;
+  }
+  .streamname {
+    font-size: 30px;
+    float: left;
+    height:30px;
+  }
+  .creator {
+    font-size: 20px;
+    float: left;
+    padding-top:9px;
+    height:30px;
+    vertical-align: bottom;
+    padding-left: 15px;
+  }
+  #metadata {
+    height:30px;
+  }
+  #lightscontainer {
+    clear: both;
+  }
+
+
+@media screen and (min-width: 1200px) {
+  #container {
+    width: 900px;
+  }
+
+  #lightscontainer {
+    width: 900px;
+    height: 600px;
+}
+</style>
+</head>
+<body>
+  <div id="container">
+    <div id="title">
+      <h1>Chroma Lights</h1>
+    </div>
+    <div id="metadata">
+      <div class='streamname' id="streamname"></div> <div class='creator' id='creator'></div>
+    </div>
+
+    <div id="lightscontainer">
+
+    </div>
+    
+  </div>
+
+</body>

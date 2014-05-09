@@ -11,8 +11,8 @@ FadeAnimation:
     FADEINRATE is the (invese) rate in which things fade out (to a smaller value).  1 is instant, > 1 gets slower and slower
 """
 class FadeAnimation(threading.Thread):
-    curcolors = [(0.0,0.0,0.0)]*24
-    targetcolors= [(0.0,0.0,0.0)]*24
+    curcolors = [(0.0,0.0,0.0)]*48
+    targetcolors= [(0.0,0.0,0.0)]*48
     FADEINRATE = 3.0
     FADEOUTRATE = 3.0
     FRAMERATE = 30.0

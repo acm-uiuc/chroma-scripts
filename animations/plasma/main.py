@@ -2,7 +2,6 @@
 import math
 import random
 import sys
-sys.path.append("./osc")
 from oscapi import ColorsOut
 
 board = {}
@@ -23,8 +22,8 @@ def update(t):
         board[cell] = (s, 1 - s / 2, 1)
 
 def init():
-    for i in range(6):
-        for j in range(4):
+    for i in range(8):
+        for j in range(6):
             board[(i,j)] = 1
 
 def hsv_to_rgb(h, s, v):
@@ -48,8 +47,8 @@ if __name__ == "__main__":
     while True:
         pix = []
         update((time.time() - start) * .03 + 10)
-        for i in xrange(6):
-            for j in xrange(4):
+        for i in xrange(8):
+            for j in xrange(6):
                 h, s, v = board[(i, j)]
                 r, g, b = hsv_to_rgb(h * 360., s, v)
                 # print board[(i, j)],r, g, b

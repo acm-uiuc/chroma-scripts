@@ -1,5 +1,4 @@
 import sys, random
-sys.path.append("./osc")
 from oscapi import ColorsOut
 
 falloffRate = 7.0
@@ -7,13 +6,13 @@ falloffRate = 7.0
 if __name__ == "__main__":
     import time
     out = ColorsOut()
-    pix = [(0.0,0.0,0.0)] * 24
+    pix = [(0.0,0.0,0.0)] * 48
     while True:
         # Make some rain
         if random.randint(0,5) < 3:
-            pix[random.randint(0,23)] = (0.0,0.0,1023.0)
+            pix[random.randint(0,47)] = (0.0,0.0,1023.0)
         out.write(pix)
-        for i in xrange(24):
+        for i in xrange(48):
             if pix[i][2] > 0.0:
                 pix[i] = (0.0,0.0,pix[i][2] - falloffRate)
             else:

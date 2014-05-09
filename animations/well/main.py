@@ -1,5 +1,4 @@
 import sys
-sys.path.append("./osc")
 from oscapi import ColorsOut
 import random
 import math
@@ -78,8 +77,9 @@ def set_layout(col1, col2, a, times):
 
 if __name__ == "__main__":
     while True:
-        well(cool_trans[0][0], cool_trans[0][1])
+        # well(cool_trans[0][0], cool_trans[0][1])
         # fade_out()
         # set_layout(cool_trans[1][0], cool_trans[1][1], 4, 4)
         # fade_in()
         # well(cool_trans[1][0], cool_trans[1][1])
+        well()

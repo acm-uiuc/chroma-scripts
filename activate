@@ -1,0 +1,54 @@
+# Activate script for chroma
+# Type in "source activate" before doing your poopage.
+
+# guilty until proven innocent
+FIRSTRUN=false
+if [ ! -d "./env/lib/python2.7/site-packages/cherrypy" ]; then
+    FIRSTRUN=true
+fi
+TABCOMPLETION='_anims(){ _arguments "1: :(`ls animations`)" }; compdef _anims run.py'
+VERBOSE=false
+# Just make them install virtualenv if they don't have it already.
+if ! which virtualenv &> /dev/null; then
+    echo "\033[1m\033[31m[error]\033[0m please install virtualenv first."
+    exit 1
+fi
+
+# Make sure environment exists
+if [ -d "./env" ]; then
+    if $VERBOSE; then
+        echo "\033[1m\033[33m[info]\033[0m virtualenv is already installed at ./env"
+    fi
+else
+    echo "\033[1m\033[33m[info]\033[0m virtualenv not created. doing that:"
+    virtualenv env | awk '{ print "\t" $0 }'
+    echo "\033[1m\033[33m[info]\033[0m created virtualenv in ./env"
+fi
+
+# Make sure tab completion for run.py exists
+if grep "$TABCOMPLETION" env/bin/activate &> /dev/null; then
+    if $VERBOSE; then
+        echo "\033[1m\033[33m[info]\033[0m tab completion already injected"
+    fi
+else
+    echo "\033[1m\033[33m[info]\033[0m adding zsh tab completion to activation script"
+    echo $TABCOMPLETION >> env/bin/activate
+fi
+
+if $VERBOSE; then
+    echo "\033[1m\033[33m[info]\033[0m activating"
+fi
+source env/bin/activate
+
+# Make sure dependencies are up to date
+if $FIRSTRUN; then
+    echo "\033[1m\033[33m[info]\033[0m making sure all dependencies are installed. may take a bit, since this your first run."
+    pip install -r dependencies.txt
+else
+    if $VERBOSE; then
+        echo "\033[1m\033[33m[info]\033[0m making sure all dependencies are, you know, there and stuff."
+    fi
+    pip install -r dependencies.txt &> /dev/null
+fi
+
+echo "\033[1m\033[32m[woot] \033[0mactivated!"

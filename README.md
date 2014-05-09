@@ -1,32 +1,97 @@
 Chroma-Lights
 =============
 
-Chroma lights is a frame work for running annimations for led lights over OSC.
+Chroma is a set of 48 lights located in the main office of the ACM at UIUC (see more on it's main site: http://www.acm.uiuc.edu/sigmusic/chroma/)
+
+This repo contains the environment to code for them, as well as the collection of everyone's animations. It contains a full testing environment, and handy animation utilities. Fork this repo and submit a pull request to add your changes back to the main repository.
 
 Setup
 -----
-#### 1. Install virtualenv (skip if you have it already)
+Install virtualenv (skip if you have it already).
+
 ```bash
 sudo easy_install virtualenv
 ```
 
-#### 2. Create your virtualenv for chroma-scripts
+Move on to running to get the environment activated and dependencies checked.
+
+###Windows users
+Scroll down to see instructions since there are a buttload.
+
+Running
+-------
+There is a simple emulator provided that will start automatically when run.py is executed if it's not running already.
+In your chrome-scripts directory, run the activate script. If this is your first time running it, give it a bit to fetch dependencies and setup the environment:
+
 ```bash
-virtualenv env # or replace 'env' with whatever folder  you want your environment in
+source activate
 ```
 
-#### 3. Activate the environment
+To run an animation:
+
 ```bash
-source env/bin/activate
+./run.py [animation name]
 ```
 
-#### 4. Install dependencies
-```bash
-pip install -r dependencies.txt
+If you're on zsh, tab completion should work too. If there isn't a server or emulator started, it will start the emulator for you automatically.
+
+When you're done hacking, `deactivate` to get exit out of virtualenv.
+Contributing
+------------
+To contribute add a new folder in the animation directory. 
+This folder should be have a unique name for the animation.
+The folder must contain the following two files:
+
+main.py:
+
+```python
+import sys
+from oscapi import ColorsOut
+...
 ```
 
-Windows Setup
------
+manifest.json:
+
+```json
+{
+	"name":"Random Colors",
+	"description":"Random colors on 3 second intervals",
+	"creator":"RJ and Reed"
+}
+```
+
+Each light recieves an input that is a tuple (r,g,b) where each of r, g, b can be 0-1023.
+
+Construct an array of tuples and send them to the OSC server with 
+
+```python
+pix = [(1023.0,0.0,0.0)]*48
+out = ColorsOut()
+out.write(pix)
+```
+
+To add simple effects, such as automatic fade-in and fade-out of pixels, use the animations library in place of ColorsOut
+
+```python
+from animations import FadeAnimation
+pix = [(1023.0,0.0,0.0)]*48
+out = FadeAnimation()
+out.FADEINRATE = 2.0 #optional
+out.FADEOUTRATE = 8.0 #optional, makes things 'trail off'
+out.start()
+out.write(pix)
+```
+
+Tips and Tricks
+---------------
+
+Chroma is bright, and can easily be the predominant lighting in the room.  Fast blinking of the lights can be intense, so be considerate.
+
+* Avoid instantaneous changes in both intensity and color
+* Use the provided animation framework to transition between colors
+
+Windows Setup Cont'd
+--------------------
 ###### 0. Install Python 2.x from http://www.python.org/getit/
 
 ###### 1. Download and run Processing for Windows from http://processing.org/download/
@@ -65,68 +130,3 @@ python run.py random
 Note: be sure (env) is displayed at the beginning of every command line when running scripts, or else it will not work!
 
 ###### 9. Check your emulator. It should be displaying random colors.
-
-Running
--------
-You'll want to activate your virtualenv if it's not already. In your chrome-scripts folder (after having set everything up above before), `source env/bin/activate`.
-In order to run the animations locally, we provide a lights emulator written in Processing.
-
-To run the light emulator: `$ emulator/lights_emulator`
-
-To run an animation: `$ ./run.py [animation name]`
-
-
-Contributing
-------------
-To contribute add a new folder in the animation directory. 
-This folder should be have a unique name for the animation.
-The folder must contain the following two files:
-
-main.py:
-
-```python
-import sys
-sys.path.append("./osc")
-from oscapi import ColorsOut
-...
-```
-
-manifest.json:
-
-```json
-{
-	"name":"Random Colors",
-	"description":"Random colors on 3 second intervals",
-	"creator":"RJ and Reed"
-}
-```
-
-Each light recieves an input that is a tuple (r,g,b) where each of r, g, b can be 0-1023.
-
-Construct an array of tuples and send them to the OSC server with 
-
-```python
-pix = [(1023.0,0.0,0.0)]*24
-out = ColorsOut()
-out.write(pix)
-```
-
-To add simple effects, such as automatic fade-in and fade-out of pixels, use the animations library in place of ColorsOut
-
-```python
-from animations import FadeAnimation
-pix = [(1023.0,0.0,0.0)]*24
-out = FadeAnimation()
-out.FADEINRATE = 2.0 #optional
-out.FADEOUTRATE = 8.0 #optional, makes things 'trail off'
-out.start()
-out.write(pix)
-```
-
-Tips and Tricks
----------------
-
-Chroma is bright, and can easily be the predominant lighting in the room.  Fast blinking of the lights can be intense, so be considerate.
-
-* Avoid instantaneous changes in both intensity and color
-* Use the provided animation framework to transition between colors
