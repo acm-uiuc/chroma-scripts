@@ -16,17 +16,18 @@ nice_pixels = [
 scale = 1
 out = FadeAnimation()
 out.start()
+light_count = 48
 
 
 def frame1():
     scale = random.randint(1,4)
-    layout = [nice_pixels[0]]*24
+    layout = [nice_pixels[0]]*light_count
     out.write(layout)
     time.sleep(3*scale)
-    layout = [nice_pixels[1]]*24
+    layout = [nice_pixels[1]]*light_count
     out.write(layout)
     time.sleep(5*scale)
-    layout = [nice_pixels[2]]*24
+    layout = [nice_pixels[2]]*light_count
     out.write(layout)
     time.sleep(1*scale)
 
