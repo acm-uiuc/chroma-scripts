@@ -15,7 +15,8 @@ template = [[0,1,4,5],[2,3,6,7],[8,9,12,13],[10,11,14,15],[16,17,20,21],[18,19,2
 bgColor=(0.0,0.0,0.0)
 out = FadeAnimation()
 out.start()
-layout = [bgColor]*24
+light_count = 48
+layout = [bgColor]* light_count
 
 """
 Spirals! Start from 0-3,3-15,15-12,12-4,4-6,6-10,10-9, then do it in reverse
@@ -43,7 +44,7 @@ Make the center box blink and fade out.
 """
 
 def blinky():
-    layout = [bgColor]*24
+    layout = [bgColor]* light_count
 
     rand = random.sample(nice_pixels,2)
     for i in template[len(template)-2]:
@@ -55,11 +56,11 @@ def blinky():
     out.write(layout)
     time.sleep(0.3)
     temp = layout
-    layout = [bgColor]*24
+    layout = [bgColor]* light_count
     #recycle code later
     # for i in range(3):
     #     if (i%2 == 0):
-    #         layout = [bgColor]*24
+    #         layout = [bgColor]* light_count
     #     else :
     #         layout = temp
     #     out.write(layout)
