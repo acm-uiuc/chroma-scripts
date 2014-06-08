@@ -35,7 +35,7 @@ if __name__ == "__main__":
 	x_vals = Queue(maxsize=tailsize)
 	y_vals = Queue(maxsize=tailsize)
 	out = FadeAnimation()	   #Set up the fade animation
-	out.FADERATE = 1.0
+	out.FADERATE = 5.0
 	out.start()
 	
 	for i in range(MAX_X * MAX_Y):
