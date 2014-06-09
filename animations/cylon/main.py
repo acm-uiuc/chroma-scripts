@@ -12,12 +12,12 @@ if __name__ == "__main__":
     while True:
         pix = []
         alive = 0
-        if n == 3:
+        if n == 5:
             direction = -1
         elif n == 0:
             direction = 1
-        for i in xrange(6):
-            for j in xrange(4):
+        for i in xrange(8):
+            for j in xrange(6):
                 if j == n:
                     pix.append((1023.0,0.0,0.0))
                 else:
