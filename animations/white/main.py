@@ -12,6 +12,6 @@ if __name__ == "__main__":
     #g = 255.0
     #b = 70.0
     while True:
-        pix = [(4.0 * r, 4.0 * g, 4.0 * b)] * 24
+        pix = [(4.0 * r, 4.0 * g, 4.0 * b)] * 48
         out.write(pix)
         time.sleep(0.2)
