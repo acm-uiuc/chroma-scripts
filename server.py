@@ -1,4 +1,4 @@
-#!./virt_env/bin/python
+#! /usr/bin/env python
 import os
 import cherrypy as http
 import subprocess
