@@ -36,6 +36,9 @@ To run an animation:
 If you're on zsh, tab completion should work too. If there isn't a server or emulator started, it will start the emulator for you automatically.
 
 When you're done hacking, `deactivate` to get exit out of virtualenv.
+
+If you need to restart the server, see [here](Documentation/Production-Notes.md).
+
 Contributing
 ------------
 To contribute add a new folder in the animation directory. 
