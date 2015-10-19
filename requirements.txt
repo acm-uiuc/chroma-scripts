@@ -9,3 +9,5 @@ simplejson==2.4.0
 yolk==0.4.3
 ZConfig==3.0.4
 zdaemon==4.0.1
+PyAudio==0.2.8
+numpy==1.10.1
